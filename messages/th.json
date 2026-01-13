@@ -1,0 +1,23 @@
+{
+    "Header":
+    {
+        "thailandcube": "ชมรมลูกบาศก์ไทย",
+        "login": "ล็อกอิน",
+        "login_with_wca": "ล็อกอินด้วย WCA",
+        "dropdown": 
+        {
+            "profile": "หน้าโพรไฟล์",
+            "my_competitions": "การแข่งขันของฉัน",
+            "create_new_competition": "สร้างการแข่งขันใหม่",
+            "logout": "ออกจากระบบ"
+        }
+    },
+    "Profile":
+    {
+        
+    },
+    "NewCompetition":
+    {
+        "title": "สร้างร่างการแข่งขันใหม่"
+    }
+}

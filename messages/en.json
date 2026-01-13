@@ -1,0 +1,23 @@
+{
+    "Header":
+    {
+        "thailandcube": "ThailandCube",
+        "login": "Login",
+        "login_with_wca": "Login with WCA",
+        "dropdown": 
+        {
+            "profile": "Profile",
+            "my_competitions": "My Competitions",
+            "create_new_competition": "Create New Competitions",
+            "logout": "Logout"
+        }
+    },
+    "Profile":
+    {
+        
+    },
+    "NewCompetition":
+    {
+        "title": "Create New Competition Proposal"
+    }
+}

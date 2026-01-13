@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id         Int        @id
+  competitor Competitor @relation(fields: [id], references: [id])
+  role       String     @default("user")
+}
+
+model Competitor {
+  id      Int      @id
+  wca_id  String   @unique
+  name    String
+  results Result[]
+  user    User?
+}
+
+model Competition {
+  id          String   @id
+  proposal_id String?  @unique
+  name        String   @unique
+  location    String
+  start_date  DateTime
+  end_date    DateTime
+  rounds      Round?
+}
+
+model Round {
+  id             Int         @id @default(autoincrement())
+  competition_id String      @unique
+  event_id       String
+  round          Int
+  time_limit     Float
+  cutoff         Float?
+  proceed        Float?
+  results        Result[]
+  competition    Competition @relation(fields: [competition_id], references: [id])
+}
+
+model Result {
+  id            Int        @id @default(autoincrement())
+  round_id      Int
+  competitor_id Int
+  display       String?
+  attempts      Float[]
+  result        Float?
+  best          Float?
+  competitor    Competitor @relation(fields: [competitor_id], references: [id])
+  round         Round      @relation(fields: [round_id], references: [id])
+
+  @@unique([competitor_id, round_id])
+}

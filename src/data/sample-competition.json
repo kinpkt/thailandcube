@@ -1,0 +1,86 @@
+{
+    "competitionId": "BangkokBokkang2026",
+    "name": "Bangkok Bokkang 2026",
+    "shortName": "Bangkok Bokkang 2026",
+    "nameReason": "ไผทำมวน",
+    "venue":
+    {
+        "name": "Central Bangna",
+        "cityName": "Bangkok",
+        "countryId": "TH"
+    },
+    "startDate": "2026-05-09",
+    "endDate": "2026-05-10",
+    "series": {},
+    "competitorLimit":
+    {
+        "enabled": true,
+        "count": 200,
+        "reason": "Limited venue space"
+    },
+    "staff":
+    {
+        "staffDelegateIds": [21095],
+        "traineeDelegateIds": [],
+        "organizerIds": [88273]
+    },
+    "championships": [],
+    "website":
+    {
+        "usesWcaRegistration": true,
+        "usesWcaLive": true
+    },
+    "userSettings":
+    {
+        "receiveRegistrationEmails": true
+    },
+    "entryFees":
+    {
+       "currencyCode": "THB",
+       "baseEntryFee": 250,
+       "refundPolicyPercent": 50,
+       "refundPolicyLimitDate": "2026-05-01T09:00:00Z"
+    },
+    "registration":
+    {
+        "openingDateTime": "2026-04-10T09:00:00Z",
+        "closingDateTime": "2026-05-01T09:00:00Z",
+        "waitingListDeadlineDate": "2026-05-01T09:00:00Z",
+        "eventChangeDeadlineDate": "2026-05-01T09:00:00Z",
+        "allowOnTheSpot": false,
+        "competitorCanCancel": "not_accepted",
+        "allowSelfEdits": true,
+        "guestsEnabled": false,
+        "guestEntryStatus": "",
+        "forceComment": false
+    },
+    "eventRestrictions":
+    {
+        "forbidNewcomers":
+        {
+            "enabled": false
+        },
+        "earlyPuzzleSubmission":
+        {
+            "enabled": false
+        },
+        "qualificationResults":
+        {
+            "enabled": false
+        },
+        "eventLimitation":
+        {
+            "enabled": false
+        },
+        "mainEventId": "333"
+    },
+    "admin":
+    {
+        "isConfirmed": false,
+        "isVisible": false
+    },
+    "cloning":
+    {
+        "cloneTabs": false
+    }
+}
