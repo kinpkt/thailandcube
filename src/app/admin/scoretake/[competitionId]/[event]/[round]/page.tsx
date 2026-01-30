@@ -1,7 +1,7 @@
 import { getRoundDetails } from '@/app/actions/rounds';
 import { getCompetitorsInRound } from '@/app/actions/competitors';
 import ScoretakerPanel from '@/app/components/ScoretakerPanel';
-import { EventType } from '@/generated/prisma';
+import { EventType } from '@prisma/client';
 
 const Page = async ({ params }: {params: Promise<{competitionId: string, event: string, round: string}>}) =>
 {
@@ -13,7 +13,7 @@ const Page = async ({ params }: {params: Promise<{competitionId: string, event: 
 
     return (
         <>
-            <ScoretakerPanel results={resultsData} eventDetail={roundDetail}/>
+            {/* <ScoretakerPanel results={resultsData} eventDetail={roundDetail}/> */}
         </>
     );
 }

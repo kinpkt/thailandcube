@@ -3,7 +3,7 @@
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from '@heroui/react';
 import LBCB2026 from '@/data/schedule/LBCB2026.json';
 import { useLocale, useTranslations } from 'next-intl';
-import { Competition } from '@/generated/prisma';
+import { Competition } from '@prisma/client';
 import { dateToRange } from '@/lib/DateTimeFormatter';
 
 type ScheduleItem = {

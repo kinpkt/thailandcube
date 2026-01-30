@@ -7,7 +7,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { LanguageIcon } from '@heroicons/react/16/solid';
 import { useEffect, useState } from 'react';
 import { getUserRole } from '@/app/actions/users';
-import { Role } from '@/generated/prisma';
+import { Role } from '@prisma/client';
 
 const Header = () =>
 {

@@ -1,6 +1,6 @@
 'use client';
 
-import { Competitor, EventType, Round } from '@/generated/prisma';
+import { Competitor, EventType, Round } from '@prisma/client';
 import { numToFormatted } from '@/lib/DateTimeFormatter';
 import Result from '@/model/Result';
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from '@heroui/react';

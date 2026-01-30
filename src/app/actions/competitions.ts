@@ -1,6 +1,6 @@
 'use server';
 
-import { Competition } from '@/generated/prisma';
+import { Competition } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 
 interface Options

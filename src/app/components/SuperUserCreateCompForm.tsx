@@ -4,7 +4,7 @@ import { Form, Input, Button, Select, SelectItem, DatePicker, Textarea } from '@
 import { useState } from 'react';
 import { parseAbsoluteToLocal, DateValue, getLocalTimeZone } from '@internationalized/date'; // Optional: depending on how you handle dates
 import { EventCodeToFullMap } from '@/lib/EnumMapping';
-import { EventType } from '@/generated/prisma';
+import { EventType } from '@prisma/client';
 import { createNewCompetition } from '@/app/actions/competitions';
 
 const CreateCompetitionForm = () => {

@@ -1,6 +1,6 @@
 import { EventCodeToFullMap } from '@/lib/EnumMapping';
 import ResultTable from '@/app/components/ResultTable';
-import { EventType } from '@/generated/prisma';
+import { EventType } from '@prisma/client';
 import { getRoundResults } from '@/app/actions/results';
 import { getRoundDetails } from '@/app/actions/rounds';
 

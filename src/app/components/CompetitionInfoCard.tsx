@@ -1,7 +1,7 @@
 'use client';
 
+import { Competition } from '@prisma/client';
 import { dateToRange } from '@/lib/DateTimeFormatter';
-import { Competition } from '@/generated/prisma';
 import { Card, CardHeader, CardBody, CardFooter, Divider, Link, Image, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from '@heroui/react';
 import { useLocale, useTranslations } from 'next-intl';
 import LBCB2026 from '@/data/schedule/LBCB2026.json';

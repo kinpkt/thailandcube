@@ -1,6 +1,7 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
+import { EventType } from '@prisma/client';
 
 export async function getRoundResults({competitionId, event, round}: {competitionId: string, event: EventType, round: number})
 {

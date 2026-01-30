@@ -18,7 +18,7 @@ import {
 import { numToFormatted, formattedToNum } from '@/lib/DateTimeFormatter';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { EventType, Round, Result, Competitor } from '@/generated/prisma';
+import { EventType, Round, Result, Competitor } from '@prisma/client';
 import axios from 'axios';
 import { calculateAo5, calculateBo3 } from '@/lib/Calculation';
 

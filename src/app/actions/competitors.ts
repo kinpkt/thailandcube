@@ -1,6 +1,6 @@
 'use server';
 
-import { EventType } from '@/generated/prisma';
+import { EventType } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { getEventByCompetitionId } from '@/app/actions/events';
 
