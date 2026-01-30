@@ -67,7 +67,7 @@ const CompetitionInfoCard = ({competition, isWCA}: {competition: Competition | n
                     <Divider/>
                     <CardFooter>
                         { !isWCA ? <Button color='success' variant='flat' as={Link} href='https://docs.google.com/forms/d/e/1FAIpQLSfizf8EuVAvcKO86AamWJyAEmjXgHHIT08LOvTG3cr6zz3exA/viewform?usp=header'>{t('register')}</Button> : <></>}
-                        <Button color='primary' variant='flat' className={!isWCA ? 'mx-2' : ''} as={Link} href={isWCA ? `https://www.worldcubeassociation.org/competitions/${competition.id}` : `/${competition.competitionId}`}>{t('details')}</Button>
+                        <Button color='primary' variant='flat' className={!isWCA ? 'mx-2' : ''} as={Link} href={isWCA ? `https://www.worldcubeassociation.org/competitions/${competition.competitionId}` : `/${competition.competitionId}`}>{t('details')}</Button>
                     </CardFooter>
                 </Card>
 

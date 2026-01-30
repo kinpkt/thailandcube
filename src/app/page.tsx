@@ -17,6 +17,7 @@ const Page = async () =>
         const res = await axios.get(apiUrl);
         wcaCompetitions = res.data.map((comp: any) => ({
             ...comp,
+            competitionId: comp.id,
             startDate: new Date(comp.start_date), 
             endDate: new Date(comp.end_date)
         }));
