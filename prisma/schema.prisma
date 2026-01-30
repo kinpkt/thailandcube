@@ -114,22 +114,23 @@ model Event {
   registrationEvents RegistrationEvent[]
   rounds        Round[]
 
-  @@unique([event, competitionId])
+  @@unique([event, competitionId, maxAge])
 }
 
 model Round {
-  id        Int      @id @default(autoincrement())
+  id                Int      @id @default(autoincrement())
 //  competitionId  String      @map("competition_id")
 //  competition    Competition @relation(fields: [competitionId], references: [competitionId])
-  eventId   Int      @map("event_id")
-  event     Event    @relation(fields: [eventId], references: [id])
-  round     Int
-  timeLimit Float    @map("time_limit")
-  cutoff    Float?
-  proceed   Float?
-  format    Format
-  open      Boolean  @default(false)
-  results   Result[]
+  eventId           Int      @map("event_id")
+  event             Event    @relation(fields: [eventId], references: [id])
+  round             Int
+  timeLimit         Float    @map("time_limit")
+  cutoff            Float?
+  proceed           Float?
+  tournamentUrl     String?  @map("tournament_url")
+  format            Format
+  open              Boolean  @default(false)
+  results           Result[]
 
   @@unique([eventId, round])
 //  @@unique([competitionId, eventId, round])

@@ -1,6 +1,6 @@
 'use server';
 
-import { EventType } from '@prisma/client';
+import { Event, EventType } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 
 interface Options
@@ -63,6 +63,27 @@ export async function getAllEventsByCompetitionId(competitionId: string, options
         );
 
         return queriedEvent || null;
+    }
+    catch (error) 
+    {
+        console.error('Database Error:', error);
+        return null;
+    }
+}
+
+export async function createEvent({eventData}: {eventData: Event})
+{
+    const { id, ...data } = eventData;
+
+    try
+    {
+        await prisma.event.create(
+            {
+                data
+            }
+        );
+
+        return true;
     }
     catch (error) 
     {

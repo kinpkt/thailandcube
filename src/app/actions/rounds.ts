@@ -4,8 +4,16 @@ import { EventType, Round } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { getEventByCompetitionId } from './events';
 
-export async function getRoundDetails({competitionId, event, round}: {competitionId: string, event: EventType, round: number})
+interface Options
 {
+    withEvent?: boolean
+    withResults?: boolean
+} 
+
+export async function getRoundDetails({competitionId, event, round}: {competitionId: string, event: EventType, round: number}, options: Options = {})
+{
+    const { withEvent = true, withResults = true } = options; 
+
     try
     {
         const rounds = await prisma.round.findFirst(
@@ -31,25 +39,49 @@ export async function getRoundDetails({competitionId, event, round}: {competitio
     }
 }
 
-export async function updateRound({competitionId, event, roundData}: {competitionId: string, event: EventType, roundData: Round})
+export async function getAllRoundsByEventId({eventId}: {eventId: number}, options: Options = {})
 {
-    const { id, ... data } = roundData;
-
-    const eventRecord = await getEventByCompetitionId({competitionId, event});
+    const { withEvent = true, withResults = true } = options; 
 
     try
     {
-        if (!eventRecord)
-            throw new Error('Event record not found');
+        const rounds = await prisma.round.findMany(
+            {
+                where:
+                {
+                    eventId
+                },
+                include:
+                {
+                    event: withEvent,
+                    results: withResults
+                }
+            }
+        );
 
+        return rounds || null;
+    }
+    catch (error) 
+    {
+        console.error('Database Error:', error);
+        return null;
+    }
+}
+
+export async function updateRound({eventId, roundNumber, roundData}: {eventId: number, roundNumber: number | undefined, roundData: Round})
+{
+    const { id, ... data } = roundData;
+
+    try
+    {
         const rounds = await prisma.round.upsert(
             {
                 where:
                 {
                     eventId_round:
                     {
-                        eventId: eventRecord?.id,
-                        round: roundData.round
+                        eventId,
+                        round: roundNumber!
                     }
                 },
                 update:
@@ -74,22 +106,17 @@ export async function updateRound({competitionId, event, roundData}: {competitio
     }
 }
 
-export async function openRound({competitionId, event, round}: {competitionId: string, event: EventType, round: number})
+export async function openRound({eventId, roundNumber}: {eventId: number, roundNumber: number})
 {
-    const eventRecord = await getEventByCompetitionId({competitionId, event});
-
     try
     {
-        if (!eventRecord)
-            throw new Error('Event record not found');
-
         await prisma.round.update({
             where:
             {
                 eventId_round:
                 {
-                    eventId: eventRecord.id,
-                    round: round
+                    eventId,
+                    round: roundNumber
                 }
             },
             data:

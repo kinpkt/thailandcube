@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { getUserRole } from '@/app/actions/users';
 import { Spinner } from '@heroui/react';
-// import Dashboard from '@/app/components/Dashboard';
+import Dashboard from '@/app/components/Dashboard';
 import { Role } from '@prisma/client';
 
 const Page = () =>
@@ -63,7 +63,7 @@ const Page = () =>
 
     return (
         <div className='mx-auto'>
-            {/* <Dashboard /> */}
+            <Dashboard />
         </div>
     );
 }
