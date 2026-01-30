@@ -57,7 +57,7 @@ const Header = () =>
         <>
             <Navbar className='bg-blue-200 mb-5'>
                 <NavbarBrand as={Link} href='/'>
-                    <Image src='/img/ThailandCube.svg' width={40}/>
+                    <Image src='/img/thailandcube.svg' width={40}/>
                     <p className='font-bold text-black text-xl ml-5'>{t('thailandcube')}</p>
                 </NavbarBrand>
                 {/* <NavbarContent className='hidden sm:flex gap-4' justify='center'>
