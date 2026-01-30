@@ -1,0 +1,150 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+  SUPERUSER
+}
+
+enum EventType {
+  E333    @map("333")
+  E222    @map("222")
+  E444    @map("444")
+  E555    @map("555")
+  E666    @map("666")
+  E777    @map("777")
+  E333BF  @map("333bf")
+  E333FM  @map("333fm")
+  E333OH  @map("333oh")
+  CLOCK   @map("clock")
+  MINX    @map("minx")
+  PYRAM   @map("pyram")
+  SKEWB   @map("skewb")
+  SQ1     @map("sq1")
+  E444BF  @map("444bf")
+  E555BF  @map("555bf")
+  E333MBF @map("333mbf")
+}
+
+enum Format {
+  BO1
+  BO2
+  BO3
+  MO3
+  AO5
+  BO5
+  H2H
+}    
+
+enum RegistrationStatus {
+  PENDING
+  ACCEPTED
+  WAITING_LIST
+  DELETED
+}
+
+model User {
+  id         Int         @id
+  competitor Competitor?
+  role       Role        @default(USER)
+}
+
+model Competitor {
+  id            Int             @id @default(autoincrement())
+  wcaId         String?         @unique @map("wca_id")
+  name          String
+  region        String          @default("TH")
+  userId        Int?            @unique @map("user_id")
+  user          User?           @relation(fields: [userId], references: [id])
+  registrations Registration[]
+  results       Result[]
+}
+
+model Registration {
+  id            Int         @id @default(autoincrement())
+  competitionId String      @map("competition_id")
+  competition   Competition @relation(fields: [competitionId], references: [competitionId])
+  competitorId  Int         @map("competitor_id")
+  competitor    Competitor  @relation(fields: [competitorId], references: [id])
+  events        RegistrationEvent[]
+//   eventId       Int         @map("event_id")
+//   event         Event       @relation(fields: [eventId], references: [id])
+  status        RegistrationStatus
+
+  @@unique([competitorId, competitionId])
+}
+
+model RegistrationEvent {
+  id                Int             @id @default(autoincrement())
+  registrationId    Int             @map("registration_id")
+  registration      Registration    @relation(fields: [registrationId], references: [id])
+  eventId           Int             @map("event_id")
+  event             Event           @relation(fields: [eventId], references: [id])
+
+  @@unique([registrationId, eventId])
+}
+
+model Competition {
+  competitionId String   @id     @map("id")
+  proposalId    Int?     @unique @map("proposal_id")
+  name          String   @unique
+  shortName     String?  @map("short_name")
+  nameReason    String?  @map("name_reason")
+  venue         String
+  startDate     DateTime @map("start_date") // DB will store in UTC
+  endDate       DateTime @map("end_date")   // DB will store in UTC
+  events        Event[]
+  registrations Registration[]
+}
+
+model Event {
+  id            Int             @id @default(autoincrement())
+  event         EventType      
+  competitionId String          @map("competition_id")
+  competition   Competition     @relation(fields: [competitionId], references: [competitionId])
+  maxAge        Int?            @map("max_age")
+  registrationEvents RegistrationEvent[]
+  rounds        Round[]
+
+  @@unique([event, competitionId])
+}
+
+model Round {
+  id        Int      @id @default(autoincrement())
+//  competitionId  String      @map("competition_id")
+//  competition    Competition @relation(fields: [competitionId], references: [competitionId])
+  eventId   Int      @map("event_id")
+  event     Event    @relation(fields: [eventId], references: [id])
+  round     Int
+  timeLimit Float    @map("time_limit")
+  cutoff    Float?
+  proceed   Float?
+  format    Format
+  open      Boolean  @default(false)
+  results   Result[]
+
+  @@unique([eventId, round])
+//  @@unique([competitionId, eventId, round])
+}
+
+model Result {
+  id           Int        @id @default(autoincrement())
+  roundId      Int        @map("round_id")
+  competitorId Int        @map("competitor_id")
+  display      String?
+  attempts     Float[]
+  result       Float?
+  best         Float?
+  competitor   Competitor @relation(fields: [competitorId], references: [id])
+  round        Round      @relation(fields: [roundId], references: [id])
+
+  @@unique([competitorId, roundId])
+}

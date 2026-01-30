@@ -1,0 +1,54 @@
+{
+    "Header":
+    {
+        "thailandcube": "ThailandCube",
+        "login": "Login",
+        "login_with_wca": "Login with WCA",
+        "dropdown": 
+        {
+            "profile": "Profile",
+            "my_competitions": "My Competitions",
+            "create_new_competition": "Create New Competitions",
+            "admin": "Admin",
+            "logout": "Logout"
+        }
+    },
+    "Footer":
+    {
+        "thailandcube": "ThailandCube",
+        "subtitle": "Thailand's biggest Speed cubing community",
+        "contact_us": "Contact Us",
+        "forms_text": "Or contact us via"
+    },
+    "Profile":
+    {
+        
+    },
+    "NewCompetition":
+    {
+        "title": "Create New Competition Proposal"
+    },
+    "ResultTable":
+    {
+        "name": "Name",
+        "region": "Region",
+        "average": "Average",
+        "best": "Best"
+    },
+    "CompetitionInfo":
+    {
+        "non_wca": "Non-WCA Competition",
+        "wca": "WCA Competition",
+        "register": "Register",
+        "details": "More Details",
+        "schedule": "Schedule"
+    },
+    "CompetitionSchedule":
+    {
+        "time": "Time",
+        "activity": "Activity",
+        "format": "Format",
+        "time_limit": "Time Limit",
+        "ranking": "Proceeding"
+    }
+}

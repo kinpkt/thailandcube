@@ -1,0 +1,54 @@
+{
+    "Header":
+    {
+        "thailandcube": "ชมรมลูกบาศก์ไทย",
+        "login": "ล็อกอิน",
+        "login_with_wca": "ล็อกอินด้วย WCA",
+        "dropdown": 
+        {
+            "profile": "หน้าโพรไฟล์",
+            "my_competitions": "การแข่งขันของฉัน",
+            "create_new_competition": "สร้างการแข่งขันใหม่",
+            "admin": "ผู้ดูแลระบบ (Admin)",
+            "logout": "ออกจากระบบ"
+        }
+    },
+    "Footer":
+    {
+        "thailandcube": "ชมรมลูกบาศก์ไทย",
+        "subtitle": "ศูนย์กลางคนรักการเล่น Speed cubing ของประเทศไทย",
+        "contact_us": "ติดต่อเราที่",
+        "forms_text": "หรือติดต่อผ่านทาง"
+    },
+    "Profile":
+    {
+        
+    },
+    "NewCompetition":
+    {
+        "title": "สร้างร่างการแข่งขันใหม่"
+    },
+    "ResultTable":
+    {
+        "name": "ชื่อ",
+        "region": "สัญชาติ",
+        "average": "เวลาเฉลี่ย",
+        "best": "ดีที่สุด"
+    },
+    "CompetitionInfo":
+    {
+        "non_wca": "การแข่งขันของชมรมฯ",
+        "wca": "การแข่งขันที่รับรองโดย WCA",
+        "register": "สมัครการแข่งขัน",
+        "details": "หน้าเว็บการแข่งขัน",
+        "schedule": "ตารางการแข่งขัน"
+    },
+    "CompetitionSchedule":
+    {
+        "time": "เวลา",
+        "activity": "กิจกรรม",
+        "format": "รูปแบบ",
+        "time_limit": "จำกัดเวลา",
+        "ranking": "เกณฑ์การเข้ารอบ"
+    }
+}
