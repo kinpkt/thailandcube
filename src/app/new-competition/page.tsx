@@ -1,5 +1,6 @@
 import CreateCompForm from '@/app/components/CreateCompForm';
 import { useTranslations } from 'next-intl';
+import SuperUserCreateCompForm from '../components/SuperUserCreateCompForm';
 
 const Page = () =>
 {
@@ -8,7 +9,8 @@ const Page = () =>
     return (
         <>
             <h1 className='text-5xl'>{t('title')}</h1>
-            <CreateCompForm/>
+            <SuperUserCreateCompForm/>
+            {/* <CreateCompForm/> */}
         </>
     );
 }

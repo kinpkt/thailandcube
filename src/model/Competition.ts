@@ -2,16 +2,18 @@ import { Venue } from './Venue';
 
 export interface Competition
 {
-    competitionId: string;
+    id: string;
+    competitionId?: string;
+    proposalId?: number | null;
     name: string;
-    shortName: string;
-    nameReason: string;
-    venue: Venue;
-    startDate: string; // Serialized Date
-    endDate: string; // Serialized Date
-    series: CompetitionSeries;
+    shortName: string | null;
+    nameReason: string | null;
+    venue: string | Venue;
+    startDate: string | Date; // Serialized Date
+    endDate: string | Date; // Serialized Date
+    series?: CompetitionSeries;
     information?: string | null;
-    competitorLimit:
+    competitorLimit?:
     {
         enabled?: boolean | null;
         count?: number | null;
@@ -21,15 +23,15 @@ export interface Competition
         autoAcceptPreference: 'disabled' | 'bulk' | 'live';
         autoAcceptDisableThreshold?: number | null;
     }
-    staff:
+    staff?:
     {
         staffDelegateIds: number[];
         traineeDelegateIds: number[];
         organizerIds: number[];
         contact?: string | null;
     }
-    championships: string[];
-    website: 
+    championships?: string[];
+    website?: 
     {
         generateWebsite?: boolean | null;
         externalWebsite?: string | null;
@@ -37,11 +39,11 @@ export interface Competition
         usesWcaRegistration: boolean;
         usesWcaLive: boolean;
     }
-    userSettings:
+    userSettings?:
     {
         receiveRegistrationEmails: boolean;
     }
-    entryFees:
+    entryFees?:
     {
         currencyCode: string;
         baseEntryFee?: number | null;
@@ -51,7 +53,7 @@ export interface Competition
         refundPolicyPercent?: number | null;
         refundPolicyLimitDate: string; // Serialized DateTime
     }
-    registration:
+    registration?:
     {
         openingDateTime: string; // Serialized DateTime
         closingDateTime: string; // Serialized DateTime
@@ -66,7 +68,7 @@ export interface Competition
         extraRequirements?: string | null;
         forceComment?: boolean | null;
     }
-    eventRestrictions:
+    eventRestrictions?:
     {
         forbidNewcomers:
         {
@@ -93,12 +95,12 @@ export interface Competition
         mainEventId?: string;
     }
     remarks?: string | null;
-    admin: 
+    admin?: 
     {
         isConfirmed: boolean;
         isVisible: boolean;
     }
-    cloning:
+    cloning?:
     {
         fromId?: string | null;
         cloneTabs: boolean;

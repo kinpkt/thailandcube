@@ -6,6 +6,7 @@ import '../../node_modules/flag-icons/css/flag-icons.min.css';
 import './globals.css';
 
 import { NextIntlClientProvider } from 'next-intl';
+// import Footer from './components/Footer';
 
 const prompt = Prompt({
     subsets: ['latin', 'thai'],
@@ -28,6 +29,7 @@ export default async function RootLayout({children}: Readonly<{children: React.R
                         <div className='mt-5'>
                             {children}
                         </div>
+                        {/* <Footer/> */}
                     </Providers>
                 </NextIntlClientProvider>
             </body>

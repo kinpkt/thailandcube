@@ -5,16 +5,18 @@ import { useRouter } from 'next/navigation';
 import { signIn, useSession, signOut } from 'next-auth/react';
 import { useLocale, useTranslations } from 'next-intl';
 import { LanguageIcon } from '@heroicons/react/16/solid';
+import { useEffect, useState } from 'react';
+import { getUserRole } from '@/app/actions/users';
+import { Role } from '@/generated/prisma';
 
 const Header = () =>
 {
     const {isOpen: isLoginOpen, onOpen: onLoginOpen, onOpenChange: onLoginOpenChange} = useDisclosure();
+    const [isAdmin, setIsAdmin] = useState(false);
 
     const { data: session, status } = useSession();
 
     const router = useRouter();
-
-    console.log(session);
 
     const t = useTranslations('Header');
     const locale = useLocale();
@@ -23,6 +25,33 @@ const Header = () =>
         document.cookie = `locale=${nextLocale}; path=/`;
         router.refresh();
     };
+
+    useEffect(() => 
+    {
+        if (status !== 'authenticated' || !session.user)
+        {
+            return;
+        }
+
+        const fetchRoleFromDB = async () =>
+        {
+            try
+            {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const role = await getUserRole(Number(session.user.id));
+
+                setIsAdmin(role === Role.SUPERUSER || role === Role.ADMIN);
+                // setLoading(false);
+            }
+            catch (error)
+            {
+                throw error;
+            }
+        }
+
+        fetchRoleFromDB();
+    }, [status, session]);
+
 
     return (
         <>
@@ -52,7 +81,7 @@ const Header = () =>
                     <NavbarItem>
                         <Dropdown>
                             <DropdownTrigger>
-                                <Button variant='flat' size='sm' startContent={<LanguageIcon/>}>
+                                <Button variant='flat' size='sm' startContent={<LanguageIcon className='w-4 h-4'/>}>
                                     {locale === 'th' ? 'ภาษาไทย' : 'English'}
                                 </Button>
                             </DropdownTrigger>
@@ -83,8 +112,10 @@ const Header = () =>
                                     <p className='font-semibold'>{session.user.email}</p>
                                 </DropdownItem>
                                 <DropdownItem key='profile' href='/profile'>{t('dropdown.profile')}</DropdownItem>
-                                <DropdownItem key='mycomp'>{t('dropdown.my_competitions')}</DropdownItem>
-                                <DropdownItem key='createcomp' href='/new-competition'>{t('dropdown.create_new_competition')}</DropdownItem>
+                                <DropdownItem key='my-competition'>{t('dropdown.my_competitions')}</DropdownItem>
+                                {/* <DropdownItem key='create-draft-competition' href='/draft-competition'>{t('dropdown.create_new_competition')}</DropdownItem> */}
+                                <DropdownItem key='create-unofficial-competition' href='/new-competition'>{t('dropdown.create_new_competition')}</DropdownItem>
+                                {isAdmin ? <DropdownItem key='admin' href='/admin/dashboard'>{t('dropdown.admin')}</DropdownItem> : <></>}
                                 <DropdownItem key='logout' color='danger' onPress={() => signOut()}>
                                     {t('dropdown.logout')}
                                 </DropdownItem>
@@ -93,9 +124,9 @@ const Header = () =>
                     </NavbarItem>
                     ) :
                     <NavbarItem>
-                        <Button color='primary' variant='flat' onPress={onLoginOpen}>
+                        {/* <Button color='primary' variant='flat' onPress={onLoginOpen}>
                             {t('login')}
-                        </Button>
+                        </Button> */}
                     </NavbarItem>
                     }
                 </NavbarContent>

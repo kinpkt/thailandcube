@@ -19,7 +19,7 @@ const Profile = () =>
 
     useEffect(() => 
     {
-        if (status !== 'authenticated')
+        if (status !== 'authenticated' || session.user.id)
         {
             return;
         }
