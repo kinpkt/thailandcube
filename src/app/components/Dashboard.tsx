@@ -9,6 +9,7 @@ import { LinkIcon, ClockIcon, ScissorsIcon, NumberedListIcon, HashtagIcon } from
 import { EventCodeToFullMap, FormatCodeToFullMap } from '@/lib/EnumMapping';
 import { formattedToNum, numToFormatted } from '@/lib/DateTimeFormatter';
 import { createEvent, getAllEventsByCompetitionId } from '@/app/actions/events';
+import CompetitorManager from '@/app/components/CompetitorManager';
 
 interface ExtendedEvent extends Event
 {
@@ -40,6 +41,8 @@ const Dashboard = () =>
 
     return (
         <>
+            <div className='grid grid-cols-2 gap-4'>
+            <CompetitorManager/>
             <Card className='mx-auto w-lg'>
                 <CardHeader>
                     <h1>Manage Competitions</h1>
@@ -58,6 +61,7 @@ const Dashboard = () =>
                     }
                 </CardBody>
             </Card>
+            </div>
         </>
     );
 }
@@ -136,7 +140,7 @@ const EventDetails = ({ competitionId }: { competitionId: string }) =>
 
             await createEvent({eventData: payload});
 
-            alert('Task successfully done');
+            // alert('Task successfully done');
             onOpenChange();
             
             // Optional: Trigger a refresh of the list here
@@ -168,7 +172,7 @@ const EventDetails = ({ competitionId }: { competitionId: string }) =>
                     {
                         events.length === 0 ? 
                         <p>No events found, please add a new event.</p> :
-                        <Accordion selectionMode='multiple' variant='bordered'>
+                        <Accordion selectionMode='multiple' variant='splitted'>
                             {
                                 events.map((e) => (
                                     <AccordionItem key={e.id} title={`${EventCodeToFullMap[e.event as EventType]} ${e.maxAge ? `(Max Age: ${e.maxAge})` : '(Open To All Age)'}`}>
