@@ -30,7 +30,17 @@ export async function getAllCompetitorsByCompetitionId(competitionId: string, op
                 },
                 include:
                 {
-                    registrations: withRegistrations,
+                    registrations: withRegistrations ?
+                    {
+                        where:
+                        {
+                            competitionId: competitionId
+                        },
+                        include:
+                        {
+                            events: true,
+                        }
+                    } : false,
                     results: withResults,
                 }
             }

@@ -1,13 +1,14 @@
 'use client';
 
-import { Card, CardHeader, CardBody, CardFooter, Select, SelectItem, Accordion, AccordionItem, Button, Modal, ModalContent, useDisclosure, ModalHeader, ModalBody, ModalFooter, Code } from '@heroui/react';
-import { Competition, Competitor, Event, EventType, Registration, Result } from '@prisma/client';
-import { useRef, useState, useEffect } from 'react';
+import { Card, CardHeader, CardBody, CardFooter, Select, SelectItem, Accordion, AccordionItem, Button, Modal, ModalContent, useDisclosure, ModalHeader, ModalBody, ModalFooter, Code, Form, Input, addToast } from '@heroui/react';
+import { Competition, Competitor, Event, EventType, Registration, RegistrationEvent, Result } from '@prisma/client';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { getAllCompetitions } from '@/app/actions/competitions';
 import { getAllCompetitorsByCompetitionId } from '@/app/actions/competitors';
-import { ArrowUpTrayIcon, DocumentArrowUpIcon, PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/react/16/solid';
-import { getAllEventsByCompetitionId } from '@/app/actions/events';
-import { batchRegisterNewCompetitorFromCSV } from '@/app/actions/registrations';
+import { ArrowUpTrayIcon, CheckIcon, DocumentArrowUpIcon, ExclamationCircleIcon, PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/react/16/solid';
+import { getAllEventsByCompetitionId, getEventByCompetitionId } from '@/app/actions/events';
+import { batchRegisterNewCompetitorFromCSV, deleteCompetitor, registerNewCompetitor } from '@/app/actions/registrations';
+import { EventCodeToFullMap } from '@/lib/EnumMapping';
 
 interface ModalProps 
 {
@@ -17,7 +18,22 @@ interface ModalProps
 
 interface ExtendedModalProps extends ModalProps
 {
+    currentCompetitorCount?: number;
+    competitor?: ExtendedCompetitor | null;
     competitionId: string;
+    eventsInComp?: Event[];
+    onDataChange?: () => void;
+}
+
+interface ExtendedRegistration extends Registration
+{
+    events: RegistrationEvent[];
+}
+
+export interface ExtendedCompetitor extends Competitor
+{
+    registrations: ExtendedRegistration[];
+    results: Result[];
 }
 
 const CompetitorManager = () =>
@@ -64,43 +80,63 @@ const CompetitorManager = () =>
     );
 }
 
-interface ExtendedCompetitor extends Competitor
-{
-    registrations: Registration[];
-    results: Result[];
-}
-
 const CompetitorList = ({competitionId}: {competitionId: string}) =>
 {
     const [competitors, setCompetitors] = useState<ExtendedCompetitor[]>();
+    const [selectedCompetitor, setSelectedCompetitor] = useState<ExtendedCompetitor|null>(null);
+    const [eventsInComp, setEventsInComp] = useState<Event[]>();
     const {isOpen: isUploadOpen, onOpen: onUploadOpen, onOpenChange: onUploadOpenChange} = useDisclosure();
+    const {isOpen: isManualAddOpen, onOpen: onManualAddOpen, onOpenChange: onManualAddOpenChange} = useDisclosure();
+    const {isOpen: isConfirmDeleteOpen, onOpen: onConfirmDeleteOpen, onOpenChange: onConfirmDeleteOpenChange} = useDisclosure();
+
+    const loadData = useCallback(async () =>
+    {
+        const queriedCompetitorsData = await getAllCompetitorsByCompetitionId(competitionId);
+        const queriedEventsInCompData = await getAllEventsByCompetitionId(competitionId);
+        setCompetitors(queriedCompetitorsData as unknown as ExtendedCompetitor[] ?? []);
+        setEventsInComp(queriedEventsInCompData ?? []);
+    }, [competitionId]);
 
     useEffect(() =>
     {
-        const loadCompetitions = async () =>
-        {
-            const queriedData = await getAllCompetitorsByCompetitionId(competitionId);
-            setCompetitors(queriedData ?? []);
-        }
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        loadData();
+    }, [loadData]);
 
-        loadCompetitions();
-    }, [competitionId]);
+    const handleAddClick = () =>
+    {
+        setSelectedCompetitor(null);
+        onManualAddOpen();
+    }
+
+    const handleEditClick = (competitor: ExtendedCompetitor) =>
+    {
+        setSelectedCompetitor(competitor);
+        onManualAddOpen();
+    }
+
+    const handleDeleteClick = (competitor: ExtendedCompetitor) =>
+    {
+        setSelectedCompetitor(competitor);
+        onConfirmDeleteOpen();
+    }
 
     return (
         <>
             <Button color='secondary' variant='flat' className='w-fit mb-5' onPress={onUploadOpen}>Upload File</Button>
+            <Button color='primary' variant='flat' className='w-fit mb-5' onPress={handleAddClick}>Add Competitor (Manual)</Button>
             {
                 competitors?.length === 0 ? <p>No competitors in this competition, please import one first.</p> :
                 (
                     <Accordion variant='splitted'>
                         <AccordionItem title='Competitors List'>
                             {
-                                competitors?.map((competitor: Competitor, index) =>
+                                competitors?.map((competitor: ExtendedCompetitor, index) =>
                                 (
                                     <div className='grid grid-cols-[1fr_auto_auto] gap-4 mb-3 items-center' key={index}>
                                         <p>{competitor.name}</p>
-                                        <Button color='warning' variant='flat' className='w-fit'><PencilIcon className='w-5 h-5'/></Button>
-                                        <Button color='danger' variant='flat' className='w-fit'><TrashIcon className='w-5 h-5'/></Button>
+                                        <Button color='warning' variant='flat' className='w-fit' onPress={() => handleEditClick(competitor)}><PencilIcon className='w-5 h-5'/></Button>
+                                        <Button color='danger' variant='flat' className='w-fit' onPress={() => handleDeleteClick(competitor)}><TrashIcon className='w-5 h-5'/></Button>
                                     </div>
                                 ))
                             }
@@ -108,12 +144,14 @@ const CompetitorList = ({competitionId}: {competitionId: string}) =>
                     </Accordion>
                 )
             }
-            <FileUploadModal competitionId={competitionId} isOpen={isUploadOpen} onOpenChange={onUploadOpenChange}/>
+            <FileUploadModal competitionId={competitionId} isOpen={isUploadOpen} onOpenChange={onUploadOpenChange} onDataChange={loadData}/>
+            <ManualAddCompetitorModal currentCompetitorCount={competitors?.length} competitor={selectedCompetitor} competitionId={competitionId} eventsInComp={eventsInComp} isOpen={isManualAddOpen} onOpenChange={onManualAddOpenChange} onDataChange={loadData}/>
+            <ConfirmDeleteCompetitorModal competitor={selectedCompetitor} competitionId={competitionId} eventsInComp={eventsInComp} isOpen={isConfirmDeleteOpen} onOpenChange={onConfirmDeleteOpenChange} onDataChange={loadData}/>
         </>
     );
 }
 
-const FileUploadModal = ({competitionId, isOpen, onOpenChange}: ExtendedModalProps) =>
+const FileUploadModal = ({competitionId, isOpen, onOpenChange, onDataChange}: ExtendedModalProps) =>
 {    
     const [eventsInComp, setEventsInComp] = useState<Event[]>([]);
     const [selectedFile, setSelectedFile] = useState<File|null>(null);
@@ -146,20 +184,22 @@ const FileUploadModal = ({competitionId, isOpen, onOpenChange}: ExtendedModalPro
 
             if (result.success) 
             {
-                alert(`Success! Added ${result.count} competitors.`);
+                addToast({title: `เพิ่มผู้เข้าแข่งขันจำนวน ${result.count} คน สำเร็จ`, color: 'success', icon: (<CheckIcon/>)})
 
                 setSelectedFile(null);
                 onOpenChange(false);
+
+                if (onDataChange)
+                    onDataChange();
             } 
             else 
-                alert('Server reported an error processing the file.');
+                addToast({title: 'เกิดข้อผิดพลาดระหว่างการเพิ่มผู้เข้าแข่งขัน', color: 'danger', icon: (<ExclamationCircleIcon/>)})
         }
         catch (err)
         {
             console.error('Error in handleSave:', err);
             alert('Something went wrong during the upload.');
         }
-        
         
         setSelectedFile(null);
         onOpenChange(false);
@@ -255,6 +295,146 @@ const FileUploadModal = ({competitionId, isOpen, onOpenChange}: ExtendedModalPro
                                     onPress={handleSave}
                                 >
                                     Confirm Upload
+                                </Button>
+                            </ModalFooter>
+                        </>
+                )}
+                </ModalContent>
+            </Modal>
+        </>
+    );
+}
+
+const ManualAddCompetitorModal = ({currentCompetitorCount=0, competitor, competitionId, eventsInComp=[], isOpen, onOpenChange, onDataChange}: ExtendedModalProps) =>
+{
+    const [name, setName] = useState('');
+    const [wcaId, setWCAId] = useState('');
+    const [selectedEventKeys, setSelectedEventKeys] = useState<Set<string>>(new Set([]));
+
+    const displayId = competitor ? competitor.id : currentCompetitorCount + 1;
+
+    useEffect(() => 
+    {
+        if (isOpen) 
+        {
+            if (competitor) 
+            {
+                // eslint-disable-next-line react-hooks/set-state-in-effect
+                setName(competitor.name);
+                setWCAId(competitor.wcaId ?? '');
+
+                const currentRegistration = competitor.registrations.find(r => r.competitionId === competitionId);
+                const existingEventIds = currentRegistration?.events.map((re) => re.eventId.toString()) || [];
+                setSelectedEventKeys(new Set(existingEventIds));
+            } 
+            else 
+            {
+                setName('');
+                setWCAId('');
+                setSelectedEventKeys(new Set([]));
+            }
+        }
+    }, [isOpen, competitor]);
+
+    const handleSave = async () =>
+    {
+        const payload = {
+            competitorId: competitor?.id.toString() ?? '',
+            id: displayId.toString(),
+            wca_id: wcaId,
+            name: name,
+            ...Array.from(selectedEventKeys).reduce((acc, eventId) =>
+            {
+                acc[eventId] = 'true';
+                return acc;
+            }, {} as Record<string, string>)
+        };
+
+        await registerNewCompetitor({payload, competitionId, eventsInComp});
+
+        addToast({title: 'เพิ่มผู้เข้าแข่งขันสำเร็จ', color: 'success', icon: (<CheckIcon/>)})
+        
+        if (onDataChange)
+            onDataChange();
+
+        onOpenChange(false);
+    }
+
+    return (
+        <>
+            <Modal isOpen={isOpen} placement='top-center' onOpenChange={onOpenChange}>
+                <ModalContent>
+                    {(onClose) => (
+                        <>
+                            <ModalHeader className='flex flex-col gap-1'>{competitor ? `Edit ${competitor.name}` : 'Add New Competitor'}</ModalHeader>
+                            <ModalBody>
+                                <Form>
+                                    <Input value={displayId.toString()} type='number' label='ID' isDisabled/>
+                                    <Input onValueChange={setName} value={name} name='competitor-name' label='ชื่อ - นามสกุล' placeholder='ชื่อ - นามสกุลของผู้เข้าแข่งขัน' isRequired/>
+                                    <Input onValueChange={setWCAId} value={wcaId} name='wca-id' label='WCA ID' placeholder='WCA ID ผู้เข้าแข่งขัน'/>
+                                    <Select variant='bordered' selectionMode='multiple' label='Events' selectedKeys={selectedEventKeys} onSelectionChange={(keys) => setSelectedEventKeys(keys as Set<string>)}>
+                                        {
+                                            eventsInComp.map((event) => (
+                                                <SelectItem key={event.id}>{`${EventCodeToFullMap[event.event as EventType]} ${event.maxAge ? `(Max Age: ${event.maxAge})` : '(Open To All Age)'}`}</SelectItem>
+                                            ))
+                                        }
+                                    </Select>
+                                </Form>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color='danger' variant='flat' onPress={onClose}>
+                                    Close
+                                </Button>
+                                <Button 
+                                color='success' 
+                                variant='flat' 
+                                onPress={handleSave}
+                            >
+                                {competitor ? 'Save Changes' : 'Confirm Add'}
+                            </Button>
+                            </ModalFooter>
+                        </>
+                )}
+                </ModalContent>
+            </Modal>
+        </>
+    );
+}
+
+const ConfirmDeleteCompetitorModal = ({competitor, competitionId, eventsInComp=[], isOpen, onOpenChange, onDataChange}: ExtendedModalProps) =>
+{
+    const handleDelete = async () =>
+    {
+        await deleteCompetitor({competitor, competitionId, eventsInComp});
+
+        addToast({title: 'ลบผู้เข้าแข่งขันสำเร็จ', color: 'success', icon: (<CheckIcon/>)})
+        
+        if (onDataChange)
+            onDataChange();
+
+        onOpenChange(false);
+    }
+
+    return (
+        <>
+            <Modal isOpen={isOpen} placement='top-center' onOpenChange={onOpenChange}>
+                <ModalContent>
+                    {(onClose) => (
+                        <>
+                            <ModalHeader className='flex flex-col gap-1'>{`Delete ${competitor?.name} From This Competition?`}</ModalHeader>
+                            <ModalBody>
+                                Please be aware that you will have to add this competitor again after removed.
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color='danger' variant='flat' onPress={onClose}>
+                                    Close
+                                </Button>
+                                <Button 
+                                    color='success' 
+                                    variant='flat' 
+                                    onPress={handleDelete}
+                                >
+                                    Delete
                                 </Button>
                             </ModalFooter>
                         </>
