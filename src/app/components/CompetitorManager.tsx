@@ -18,7 +18,7 @@ interface ModalProps
 
 interface ExtendedModalProps extends ModalProps
 {
-    currentCompetitorCount?: number;
+    maxRegistrationId?: number;
     competitor?: ExtendedCompetitor | null;
     competitionId: string;
     eventsInComp?: Event[];
@@ -145,7 +145,7 @@ const CompetitorList = ({competitionId}: {competitionId: string}) =>
                 )
             }
             <FileUploadModal competitionId={competitionId} isOpen={isUploadOpen} onOpenChange={onUploadOpenChange} onDataChange={loadData}/>
-            <ManualAddCompetitorModal currentCompetitorCount={competitors?.length} competitor={selectedCompetitor} competitionId={competitionId} eventsInComp={eventsInComp} isOpen={isManualAddOpen} onOpenChange={onManualAddOpenChange} onDataChange={loadData}/>
+            <ManualAddCompetitorModal maxRegistrationId={competitors ? Math.max(...competitors.flatMap(c => c.registrations).filter(r => r.competitionId === competitionId).map(r => r.id)) : 0} competitor={selectedCompetitor} competitionId={competitionId} eventsInComp={eventsInComp} isOpen={isManualAddOpen} onOpenChange={onManualAddOpenChange} onDataChange={loadData}/>
             <ConfirmDeleteCompetitorModal competitor={selectedCompetitor} competitionId={competitionId} eventsInComp={eventsInComp} isOpen={isConfirmDeleteOpen} onOpenChange={onConfirmDeleteOpenChange} onDataChange={loadData}/>
         </>
     );
@@ -305,13 +305,13 @@ const FileUploadModal = ({competitionId, isOpen, onOpenChange, onDataChange}: Ex
     );
 }
 
-const ManualAddCompetitorModal = ({currentCompetitorCount=0, competitor, competitionId, eventsInComp=[], isOpen, onOpenChange, onDataChange}: ExtendedModalProps) =>
+const ManualAddCompetitorModal = ({maxRegistrationId=0, competitor, competitionId, eventsInComp=[], isOpen, onOpenChange, onDataChange}: ExtendedModalProps) =>
 {
     const [name, setName] = useState('');
     const [wcaId, setWCAId] = useState('');
     const [selectedEventKeys, setSelectedEventKeys] = useState<Set<string>>(new Set([]));
 
-    const displayId = competitor ? competitor.id : currentCompetitorCount + 1;
+    const displayId = competitor ? competitor.registrations[0].id : maxRegistrationId+1;
 
     useEffect(() => 
     {
@@ -324,7 +324,7 @@ const ManualAddCompetitorModal = ({currentCompetitorCount=0, competitor, competi
                 setWCAId(competitor.wcaId ?? '');
 
                 const currentRegistration = competitor.registrations.find(r => r.competitionId === competitionId);
-                const existingEventIds = currentRegistration?.events.map((re) => re.eventId.toString()) || [];
+                const existingEventIds = currentRegistration?.events.map((e) => e.eventId.toString()) || [];
                 setSelectedEventKeys(new Set(existingEventIds));
             } 
             else 

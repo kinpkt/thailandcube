@@ -132,6 +132,15 @@ export async function registerNewCompetitor({ payload, competitionId, eventsInCo
             }
         ));
 
+        await prisma.registrationEvent.deleteMany(
+            {
+                where: 
+                {
+                    registrationId: createdRegistration.id
+                }
+            }
+        );
+
         if (eventsToCreate.length > 0)
         {
             await prisma.registrationEvent.createMany(

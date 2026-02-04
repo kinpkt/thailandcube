@@ -36,9 +36,22 @@ export async function getAllCompetitorsByCompetitionId(competitionId: string, op
                         {
                             competitionId: competitionId
                         },
-                        include:
+                        // include:
+                        // {
+                        //     events: true,
+                        // },
+                        select:
                         {
-                            events: true,
+                            competitionId: true,
+                            events:
+                            {
+                                select:
+                                {
+                                    event: true,
+                                    eventId: true,
+                                }
+                            },
+                            id: true,
                         }
                     } : false,
                     results: withResults,
