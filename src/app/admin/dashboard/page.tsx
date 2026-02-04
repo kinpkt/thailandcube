@@ -27,7 +27,6 @@ const Page = () =>
         {
             try
             {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const role = await getUserRole(Number(session.user.id));
 
                 setIsAdmin(role === Role.SUPERUSER || role === Role.ADMIN);

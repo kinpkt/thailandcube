@@ -49,7 +49,7 @@ const Page = async () =>
             </div>
             <div>
                 <h1 className='text-2xl mb-2'>การแข่งขันที่รับรองโดย WCA</h1>
-                <div className='grid grid-cols-2 gap-4 mt-5'>
+                <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 mt-5'>
                 {
                     wcaCompetitions?.map((competition: any) => (
                         <CompetitionInfoCard key={competition.id} competition={competition} isWCA={true}/>

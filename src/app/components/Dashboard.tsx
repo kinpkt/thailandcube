@@ -9,6 +9,7 @@ import { LinkIcon, ClockIcon, ScissorsIcon, NumberedListIcon, HashtagIcon } from
 import { EventCodeToFullMap, FormatCodeToFullMap } from '@/lib/EnumMapping';
 import { formattedToNum, numToFormatted } from '@/lib/DateTimeFormatter';
 import { createEvent, getAllEventsByCompetitionId } from '@/app/actions/events';
+import CompetitorManager from '@/app/components/CompetitorManager';
 
 interface ExtendedEvent extends Event
 {
@@ -27,7 +28,6 @@ const Dashboard = () =>
         {
             const queriedData = await getAllCompetitions();
             setCompetitions(queriedData ?? []);
-            console.log(queriedData)
         }
 
         loadCompetitions();
@@ -40,24 +40,27 @@ const Dashboard = () =>
 
     return (
         <>
-            <Card className='mx-auto w-lg'>
-                <CardHeader>
-                    <h1>Manage Competitions</h1>
-                </CardHeader>
-                <CardBody>
-                    <Select className='mb-5' selectedKeys={selectedCompetitionId ? [selectedCompetitionId] : []} onChange={handleSelectedCompetitionIdChange} label='Select a competition to manage'>
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
+                <CompetitorManager/>
+                <Card className='mx-auto w-lg'>
+                    <CardHeader>
+                        <h1>Manage Competitions</h1>
+                    </CardHeader>
+                    <CardBody>
+                        <Select className='mb-5' selectedKeys={selectedCompetitionId ? [selectedCompetitionId] : []} onChange={handleSelectedCompetitionIdChange} label='Select a competition to manage'>
+                            {
+                                competitions.map((comp) => (
+                                    <SelectItem key={comp.competitionId}>{comp.name}</SelectItem>
+                                ))
+                            }
+                        </Select>
                         {
-                            competitions.map((comp) => (
-                                <SelectItem key={comp.competitionId}>{comp.name}</SelectItem>
-                            ))
+                            selectedCompetitionId ?
+                            <EventDetails competitionId={selectedCompetitionId}/> : <></>
                         }
-                    </Select>
-                    {
-                        selectedCompetitionId ?
-                        <EventDetails competitionId={selectedCompetitionId}/> : <></>
-                    }
-                </CardBody>
-            </Card>
+                    </CardBody>
+                </Card>
+            </div>
         </>
     );
 }
@@ -72,15 +75,6 @@ const EventDetails = ({ competitionId }: { competitionId: string }) =>
     const loadEventData = async () =>
     {
         const events = await getAllEventsByCompetitionId(competitionId);
-
-        // const allRounds = queriedData?.flatMap(competition =>
-        //     competition.events.flatMap(event => 
-        //         event.rounds.flatMap(round => ({
-        //             ...round,
-        //             eventEnum: event.event
-        //         }))
-        //     )
-        // );
 
         setEvents(events ?? []);
         setLoading(false);
@@ -132,11 +126,9 @@ const EventDetails = ({ competitionId }: { competitionId: string }) =>
                 maxAge: Number(formData?.maxAge)
             };
 
-            console.log('Sending payload:', payload);
-
             await createEvent({eventData: payload});
 
-            alert('Task successfully done');
+            // alert('Task successfully done');
             onOpenChange();
             
             // Optional: Trigger a refresh of the list here
@@ -168,7 +160,7 @@ const EventDetails = ({ competitionId }: { competitionId: string }) =>
                     {
                         events.length === 0 ? 
                         <p>No events found, please add a new event.</p> :
-                        <Accordion selectionMode='multiple' variant='bordered'>
+                        <Accordion selectionMode='multiple' variant='splitted'>
                             {
                                 events.map((e) => (
                                     <AccordionItem key={e.id} title={`${EventCodeToFullMap[e.event as EventType]} ${e.maxAge ? `(Max Age: ${e.maxAge})` : '(Open To All Age)'}`}>
@@ -278,7 +270,7 @@ const RoundDetails = ({ eventId, competitionId }: { eventId: number, competition
     {
         try 
         {
-            await openRound({eventId, roundNumber: round})
+            await openRound({competitionId, eventId, roundNumber: round})
 
             loadRoundData(); 
         } 
@@ -299,8 +291,6 @@ const RoundDetails = ({ eventId, competitionId }: { eventId: number, competition
                 cutoff: formattedToNum(formData?.cutoff?.toString()),
                 proceed: formData?.proceed ? Number(formData?.proceed) : null, 
             };
-
-            console.log('Sending payload:', payload);
 
             const result = await updateRound({eventId, roundNumber: payload.round, roundData: payload as Round});
 
@@ -333,12 +323,12 @@ const RoundDetails = ({ eventId, competitionId }: { eventId: number, competition
                 <p>No rounds found, please add a new round.</p> :
                 <>
                     {
-                        rounds.map((r: ExtendedRound) => (
+                        rounds.map((r: ExtendedRound, i) => (
                             <div className='grid grid-cols-3 gap-4 mb-3 items-center' key={r.id}>
                                 <p>Round {r.round}</p>
                                 {
                                     !r.open && r.format !== Format.H2H ? 
-                                    <Button color='success' variant='flat' onPress={() => handleOpenRound(r.round)}>Open Round</Button> 
+                                    <Button color='success' variant='flat' onPress={() => handleOpenRound(r.round)} isDisabled={i > 0 && !rounds[i-1].open}>Open Round</Button> 
                                     : r.format === Format.H2H ? 
                                     <Button color='success' variant='flat' as={Link} href={r.tournamentUrl ?? ''}>Manage Bracket</Button> 
                                     :
