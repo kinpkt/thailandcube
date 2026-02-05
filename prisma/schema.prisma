@@ -51,10 +51,16 @@ enum RegistrationStatus {
   DELETED
 }
 
+enum RecordType {
+  SINGLE
+  AVERAGE
+}
+
 model User {
   id         Int         @id
   competitor Competitor?
   role       Role        @default(USER)
+  @@map("user")
 }
 
 model Competitor {
@@ -66,6 +72,7 @@ model Competitor {
   user          User?           @relation(fields: [userId], references: [id])
   registrations Registration[]
   results       Result[]
+  @@map("competitor")
 }
 
 model Registration {
@@ -80,6 +87,7 @@ model Registration {
   status        RegistrationStatus
 
   @@unique([competitorId, competitionId])
+  @@map("registration")
 }
 
 model RegistrationEvent {
@@ -90,6 +98,7 @@ model RegistrationEvent {
   event             Event           @relation(fields: [eventId], references: [id])
 
   @@unique([registrationId, eventId])
+  @@map("registration_event")
 }
 
 model Competition {
@@ -103,6 +112,8 @@ model Competition {
   endDate       DateTime @map("end_date")   // DB will store in UTC
   events        Event[]
   registrations Registration[]
+
+  @@map("competition")
 }
 
 model Event {
@@ -114,25 +125,28 @@ model Event {
   registrationEvents RegistrationEvent[]
   rounds        Round[]
 
-  @@unique([event, competitionId])
+  @@unique([event, competitionId, maxAge])
+  @@map("event")
 }
 
 model Round {
-  id        Int      @id @default(autoincrement())
+  id                Int      @id @default(autoincrement())
 //  competitionId  String      @map("competition_id")
 //  competition    Competition @relation(fields: [competitionId], references: [competitionId])
-  eventId   Int      @map("event_id")
-  event     Event    @relation(fields: [eventId], references: [id])
-  round     Int
-  timeLimit Float    @map("time_limit")
-  cutoff    Float?
-  proceed   Float?
-  format    Format
-  open      Boolean  @default(false)
-  results   Result[]
+  eventId           Int      @map("event_id")
+  event             Event    @relation(fields: [eventId], references: [id])
+  round             Int
+  timeLimit         Float    @map("time_limit")
+  cutoff            Float?
+  proceed           Float?
+  tournamentUrl     String?  @map("tournament_url")
+  format            Format
+  open              Boolean  @default(false)
+  results           Result[]
 
   @@unique([eventId, round])
 //  @@unique([competitionId, eventId, round])
+  @@map("round")
 }
 
 model Result {
@@ -147,4 +161,21 @@ model Result {
   round        Round      @relation(fields: [roundId], references: [id])
 
   @@unique([competitorId, roundId])
+  @@map("result")
+}
+
+model NationalRecord {
+  id              Int         @id @default(autoincrement())
+  holder          String
+  caption         String?
+  event           EventType
+  result          String
+  type            RecordType
+  imageFileName   String  @map("image_file_name")
+  mimeType        String  @map("mime_type")
+  imageData       Bytes   @map("image_data")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("national_record")
 }
