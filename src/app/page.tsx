@@ -43,10 +43,10 @@ const Page = async () =>
         <>
             <h1 className='text-4xl'>ยินดีต้อนรับสู่ ThailandCube</h1>
             <h1 className='text-3xl'>ศูนย์กลางคนรักการเล่น Speedcubing ของประเทศไทย</h1>
-            {/*<div className='mt-5'>
+            <div className='mt-5'>
                 <h1 className='text-2xl mb-2'>กิจกรรมของชมรม</h1>
                 {latestCompetition && <CompetitionInfoCard competition={latestCompetition} isWCA={false}/>}
-            </div>*/}
+            </div>
             <div>
                 <h1 className='text-2xl mb-2'>การแข่งขันที่รับรองโดย WCA</h1>
                 <div className='grid grid-cols-2 gap-4 mt-5'>
