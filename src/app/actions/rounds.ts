@@ -3,6 +3,7 @@
 import { EventType, Round } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { getEventByCompetitionId } from './events';
+import { getRoundResults } from './results';
 
 interface Options
 {
@@ -17,9 +18,11 @@ interface CreatedResultData
     attempts: number[];
 }
 
-export async function getRoundDetails({competitionId, event, round}: {competitionId: string, event: EventType, round: number}, options: Options = {})
+export async function getRoundDetails({competitionId, event, round}: {competitionId: string, event: string, round: number}, options: Options = {})
 {
     const { withEvent = true, withResults = true } = options; 
+
+    const [eventType, maxAge] = event.split('-');
 
     try
     {
@@ -31,8 +34,14 @@ export async function getRoundDetails({competitionId, event, round}: {competitio
                     event:
                     {
                         competitionId,
-                        event
+                        event: eventType as EventType,
+                        maxAge: Number.isNaN(Number(maxAge)) ? undefined : Number(maxAge),
                     }
+                },
+                include:
+                {
+                    event: withEvent,
+                    results: withResults,
                 }
             }
         );
@@ -117,88 +126,157 @@ export async function openRound({competitionId, eventId, roundNumber}: {competit
 {
     try
     {
-        const allRegistrationsInEvent = await prisma.registrationEvent.findMany(
-            {
-                where:
+        if (roundNumber === 1)
+        {
+            const allRegistrationsInEvent = await prisma.registrationEvent.findMany(
                 {
-                    eventId,
-                    registration:
+                    where:
                     {
-                        competitionId
-                    }
-                },
-                include:
-                {
-                    registration:
-                    {
-                        include:
+                        eventId,
+                        registration:
                         {
-                            competitor: true,
+                            competitionId
+                        }
+                    },
+                    include:
+                    {
+                        registration:
+                        {
+                            include:
+                            {
+                                competitor: true,
+                            }
                         }
                     }
                 }
-            }
-        );
+            );
 
-        const eventResult = await prisma.round.findUniqueOrThrow(
-            {
-                where:
+            const eventResult = await prisma.round.findUniqueOrThrow(
                 {
-                    eventId_round:
+                    where:
                     {
-                        eventId,
-                        round: roundNumber
+                        eventId_round:
+                        {
+                            eventId,
+                            round: roundNumber
+                        }
+                    },
+                    select:
+                    {
+                        id: true,
+                        results: true,
                     }
-                },
-                select:
-                {
-                    id: true,
-                    results: true,
                 }
+            );
+
+            const blankResultsData: CreatedResultData[] = [];
+
+            for (const competitorInEvent of allRegistrationsInEvent)
+            {
+                const data: CreatedResultData = {
+                    roundId: eventResult.id,
+                    competitorId: Number(competitorInEvent.registration.competitor.id),
+                    attempts: [],
+                };
+
+                blankResultsData.push(data);
             }
-        );
 
-        const blankResultsData: CreatedResultData[] = [];
+            await prisma.result.createMany(
+                {
+                    data: blankResultsData,
+                }
+            );
 
-        for (const competitorInEvent of allRegistrationsInEvent)
-        {
-            const data: CreatedResultData = {
-                roundId: eventResult.id,
-                competitorId: Number(competitorInEvent.registration.competitionId),
-                attempts: [],
-            };
+            await prisma.round.update(
+                {
+                    where:
+                    {
+                        eventId_round:
+                        {
+                            eventId,
+                            round: roundNumber
+                        }
+                    },
+                    data:
+                    {
+                        open: true,
+                    }
+                }
+            );
 
-            blankResultsData.push(data);
+            return true;
         }
-
-        await prisma.result.createMany(
-            {
-                data: blankResultsData,
-            }
-        );
-
-        await prisma.round.update(
-            {
-                where:
+        else
+        {
+            const roundDetails = await prisma.round.findFirst(
                 {
-                    eventId_round:
+                    where:
                     {
                         eventId,
-                        round: roundNumber
+                        round: roundNumber,
+                    },
+                    include:
+                    {
+                        event: true,
                     }
-                },
-                data:
-                {
-                    open: true,
                 }
-            }
-        );
+            );
 
-        return true || null;
+            const previousRoundDetails = await prisma.round.findFirst(
+                {
+                    where:
+                    {
+                        eventId: eventId,
+                        round: roundNumber-1
+                    },
+                    select:
+                    {
+                        proceed: true,
+                    }
+                }
+            )
+
+            const eventString = `${roundDetails?.event.event}${roundDetails?.event.maxAge ? `-${roundDetails?.event?.maxAge}` : ''}`;
+
+            const {valued, blank} = await getRoundResults({competitionId, event: eventString, round: roundNumber-1});
+
+            const threshold = Number.isInteger(previousRoundDetails?.proceed) ? previousRoundDetails?.proceed : Math.floor(valued.length*(previousRoundDetails?.proceed ?? 0));
+
+            const passedCompetitors = valued.slice(0, threshold!);
+
+            const resultsData = passedCompetitors.map((competitor) => (
+                {
+                    roundId: roundDetails?.id ?? 0,
+                    competitorId: competitor.competitorId,
+                    attempts: [],
+                }
+            ));
+
+            await prisma.result.createMany(
+                {
+                    data: resultsData,
+                    skipDuplicates: true,
+                }
+            );
+
+            await prisma.round.update(
+                {
+                    where:
+                    {
+                        id: roundDetails?.id,
+                    },
+                    data:
+                    {
+                        open: true,
+                    }
+                }
+            );
+        }
     }
     catch (error) 
     {
         console.error('Database Error:', error);
-        return null;
+        throw new Error('Error occured while opening a round');
     }
 }

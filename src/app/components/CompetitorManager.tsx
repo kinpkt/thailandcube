@@ -5,7 +5,7 @@ import { Competition, Competitor, Event, EventType, Registration, RegistrationEv
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { getAllCompetitions } from '@/app/actions/competitions';
 import { getAllCompetitorsByCompetitionId } from '@/app/actions/competitors';
-import { ArrowUpTrayIcon, CheckIcon, DocumentArrowUpIcon, ExclamationCircleIcon, PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/react/16/solid';
+import { ArrowUpTrayIcon, CheckIcon, DocumentArrowUpIcon, ExclamationCircleIcon, PencilSquareIcon, TrashIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import { getAllEventsByCompetitionId, getEventByCompetitionId } from '@/app/actions/events';
 import { batchRegisterNewCompetitorFromCSV, deleteCompetitor, registerNewCompetitor } from '@/app/actions/registrations';
 import { EventCodeToFullMap } from '@/lib/EnumMapping';
@@ -135,8 +135,8 @@ const CompetitorList = ({competitionId}: {competitionId: string}) =>
                                 (
                                     <div className='grid grid-cols-[1fr_auto_auto] gap-4 mb-3 items-center' key={index}>
                                         <p>{competitor.name}</p>
-                                        <Button color='warning' variant='flat' className='w-fit' onPress={() => handleEditClick(competitor)}><PencilIcon className='w-5 h-5'/></Button>
-                                        <Button color='danger' variant='flat' className='w-fit' onPress={() => handleDeleteClick(competitor)}><TrashIcon className='w-5 h-5'/></Button>
+                                        <Button color='warning' variant='flat' className='w-fit' onPress={() => handleEditClick(competitor)} isIconOnly><PencilSquareIcon className='w-5 h-5'/></Button>
+                                        <Button color='danger' variant='flat' className='w-fit' onPress={() => handleDeleteClick(competitor)} isIconOnly><TrashIcon className='w-5 h-5'/></Button>
                                     </div>
                                 ))
                             }

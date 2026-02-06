@@ -1,12 +1,12 @@
 const MONTHS_ARR = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-const numToFormatted = (time: number | undefined | null): string =>
+const numToFormatted = (time: number | undefined | null, isResult: boolean = false): string =>
 {
     if (time === 0)
         return '';
 
     if (time == null || isNaN(time))
-        return 'None';
+        return isResult ? '' : 'None';
 
     if (time === -1)
         return 'DNF';

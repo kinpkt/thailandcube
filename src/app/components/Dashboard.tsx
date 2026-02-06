@@ -1,15 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardHeader, CardBody, CardFooter, Select, SelectItem, Spinner, Button, Accordion, AccordionItem, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Input, Checkbox, Link, Tooltip } from '@heroui/react';
+import { Card, CardHeader, CardBody, CardFooter, Select, SelectItem, Spinner, Button, Accordion, AccordionItem, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Input, Checkbox, Link, Tooltip, addToast } from '@heroui/react';
 import { Competition, Event, EventType, Format, RegistrationEvent, Round } from '@prisma/client';
 import { getAllCompetitions } from '@/app/actions/competitions';
 import { getAllRoundsByEventId, openRound, updateRound } from '@/app/actions/rounds';
-import { LinkIcon, ClockIcon, ScissorsIcon, NumberedListIcon, HashtagIcon } from '@heroicons/react/16/solid';
+import { LinkIcon, ClockIcon, ScissorsIcon, NumberedListIcon, HashtagIcon, CheckIcon, PencilIcon, PencilSquareIcon } from '@heroicons/react/16/solid';
 import { EventCodeToFullMap, FormatCodeToFullMap } from '@/lib/EnumMapping';
 import { formattedToNum, numToFormatted } from '@/lib/DateTimeFormatter';
 import { createEvent, getAllEventsByCompetitionId } from '@/app/actions/events';
 import CompetitorManager from '@/app/components/CompetitorManager';
+import { clearRoundResult } from '../actions/results';
 
 interface ExtendedEvent extends Event
 {
@@ -271,6 +272,23 @@ const RoundDetails = ({ eventId, competitionId }: { eventId: number, competition
         try 
         {
             await openRound({competitionId, eventId, roundNumber: round})
+            addToast({title: `เปิดรอบการแข่งขันสำเร็จ`, color: 'success', icon: (<CheckIcon/>)})
+
+            loadRoundData(); 
+        } 
+        catch (error) 
+        {
+            console.error('Failed to open:', error);
+            alert('Failed to open round. Check console for details.');
+        }
+    }
+
+     const handleClearRound = async (round: number) =>
+    {
+        try 
+        {
+            await clearRoundResult({competitionId, eventId, round})
+            addToast({title: `เคลียร์ผลการแข่งขันสำเร็จ`, color: 'success', icon: (<CheckIcon/>)})
 
             loadRoundData(); 
         } 
@@ -317,14 +335,15 @@ const RoundDetails = ({ eventId, competitionId }: { eventId: number, competition
 
     return (
         <>
-            <Button className='mb-5' color='primary' onPress={handleAddClick}>Add New Round</Button>
+            <Button className='mb-5' color='primary' variant='flat' onPress={handleAddClick}>Add New Round</Button>
             {
                 rounds.length === 0 ? 
                 <p>No rounds found, please add a new round.</p> :
                 <>
                     {
                         rounds.map((r: ExtendedRound, i) => (
-                            <div className='grid grid-cols-3 gap-4 mb-3 items-center' key={r.id}>
+                            <div className='grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center mb-3' key={r.id}>
+                                <Button color='warning' variant='flat' isIconOnly><PencilSquareIcon className='w-5 h-5'/></Button>
                                 <p>Round {r.round}</p>
                                 {
                                     !r.open && r.format !== Format.H2H ? 
@@ -332,8 +351,10 @@ const RoundDetails = ({ eventId, competitionId }: { eventId: number, competition
                                     : r.format === Format.H2H ? 
                                     <Button color='success' variant='flat' as={Link} href={r.tournamentUrl ?? ''}>Manage Bracket</Button> 
                                     :
-                                    <Tooltip content='Already opened this round'><div className='inline-block'><Button color='success' variant='flat' isDisabled>Open Round</Button></div></Tooltip>}
-                                {r.open ? <Button color='primary' variant='flat' as={Link} href={`/admin/scoretake/${competitionId}/${r.eventId}/r${r.round}`}>Scoretake</Button> : <></>}
+                                    <Button color='danger' variant='flat' onPress={() => handleClearRound(r.round)} isDisabled={i > 0 && !rounds[i-1].open}>Clear Round</Button> 
+                                    // <Tooltip content='Already opened this round'><div className='inline-block'><Button color='success' variant='flat' isDisabled>Open Round</Button></div></Tooltip>}
+                                }
+                                {r.open ? <Button color='primary' variant='flat' as={Link} href={`/admin/scoretake/${competitionId}/${(r.event.maxAge ? `${r.event.event}-${r.event.maxAge}` : r.event.event)}/r${r.round}`}>Scoretake</Button> : <></>}
                                 {/* {r.proceed ? <Button variant='flat'>Open Next Round</Button> : <></>} */}
                             </div>
                         ))

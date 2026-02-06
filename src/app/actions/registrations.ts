@@ -277,21 +277,40 @@ export async function deleteCompetitor({competitor, competitionId, eventsInComp}
 {
     try
     {
-        if (!competitor)
+        if (!competitor) 
+        {
+            console.error("❌ Delete aborted: Competitor object is missing!");
             return;
+        }
 
-        await prisma.registrationEvent.deleteMany(
+        await prisma.result.deleteMany(
             {
-                where:
+                where: 
                 {
-                    registration:
+                    competitorId: competitor.id,
+                    round: 
                     {
-                        competitionId,
-                        competitorId: competitor.id
-                    },
+                        event: 
+                        {
+                            competitionId: competitionId
+                        }
+                    }
                 }
             }
         );
+
+        // await prisma.registrationEvent.deleteMany(
+        //     {
+        //         where:
+        //         {
+        //             registration:
+        //             {
+        //                 competitionId,
+        //                 competitorId: competitor.id
+        //             },
+        //         }
+        //     }
+        // );
 
         await prisma.registration.delete(
             {

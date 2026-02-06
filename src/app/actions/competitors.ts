@@ -68,29 +68,43 @@ export async function getAllCompetitorsByCompetitionId(competitionId: string, op
     }
 }
 
-export async function getCompetitorsInRound({competitionId, event, round}: {competitionId: string, event: EventType, round: number}, options: Option = {})
+export async function getCompetitorsInRound({competitionId, event, maxAge, round}: {competitionId: string, event: EventType, maxAge: number, round: number}, options: Option = {})
 {
     const { withRegistrations = false, withResults = true } = options; 
 
     try
-    {
+    {   
+        const roundData = await prisma.round.findFirst(
+            {
+                where:
+                {
+                    round,
+                    event:
+                    {
+                        competitionId,
+                        event,
+                        maxAge: Number.isNaN(maxAge) ? undefined : maxAge,
+                    },
+                }
+            }
+        );
+
         const competitors = await prisma.result.findMany(
             {
                 where:
                 {
-                    round:
-                    {
-                        round,
-                        event:
-                        {
-                            competitionId,
-                            event
-                        }
-                    }
+                    roundId: roundData?.id,
                 },
                 include:
                 {
-                    competitor: true
+                    competitor: 
+                    {
+                        include:
+                        {
+                            registrations: withRegistrations,
+                            results: withResults,
+                        }
+                    },
                 },
                 orderBy:
                 {
@@ -99,7 +113,7 @@ export async function getCompetitorsInRound({competitionId, event, round}: {comp
             }
         );
 
-        return competitors || [];
+        return competitors;
     }
     catch (error)
     {
