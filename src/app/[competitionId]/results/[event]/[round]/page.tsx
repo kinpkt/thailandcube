@@ -9,7 +9,7 @@ import { getCompetitorsInRound } from '@/app/actions/competitors';
 const Page = async ({ params }: {params: Promise<{competitionId: string, event: string, round: string}>}) =>
 {
     const { competitionId, event, round } = await params;
-    const [eventType, maxAge] = event.split('-');
+    const [eventType, maxAge] = event.split('-U');
     const roundNumber = Number(round.slice(1));
 
     const resultsData = (await getCompetitorsInRound({
@@ -23,7 +23,6 @@ const Page = async ({ params }: {params: Promise<{competitionId: string, event: 
 
     return (
         <>
-            <h2 className='text-3xl mb-5'>{EventCodeToFullMap[eventType as keyof typeof EventCodeToFullMap]} Round {roundNumber}</h2>
             <ResultTable results={resultsData as any} roundDetails={roundDetails} route={{competitionId, event: eventType as EventType, roundNumber}}/>
         </>
     );

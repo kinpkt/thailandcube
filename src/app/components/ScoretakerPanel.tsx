@@ -328,7 +328,7 @@ const ScoretakerPanel = ({ results: rawResults, roundDetails }: ScoretakerPanelP
     // Calculate proceeding count based on VALID results count or TOTAL? 
     // Usually based on total participants.
     const totalParticipants = valued.length + blank.length;
-    let proceedingCount = 0;
+    let proceedingCount = roundDetails?.proceed ? 0 : 3;
     if (roundDetails?.proceed && Number.isInteger(roundDetails?.proceed))
         proceedingCount = roundDetails?.proceed;
     else if (roundDetails?.proceed)

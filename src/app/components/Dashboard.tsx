@@ -327,6 +327,12 @@ const RoundDetails = ({ eventId, competitionId }: { eventId: number, competition
         }
     }
 
+    const handleOpenEditRound = (round: Round) =>
+    {
+        setFormData(round);
+        onOpenChange();
+    }
+
     useEffect(() =>
     {
         // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -343,7 +349,7 @@ const RoundDetails = ({ eventId, competitionId }: { eventId: number, competition
                     {
                         rounds.map((r: ExtendedRound, i) => (
                             <div className='grid grid-cols-[auto_1fr_auto_auto] gap-4 items-center mb-3' key={r.id}>
-                                <Button color='warning' variant='flat' isIconOnly><PencilSquareIcon className='w-5 h-5'/></Button>
+                                <Button color='warning' variant='flat' onPress={() => handleOpenEditRound(r)} isIconOnly><PencilSquareIcon className='w-5 h-5'/></Button>
                                 <p>Round {r.round}</p>
                                 {
                                     !r.open && r.format !== Format.H2H ? 
@@ -354,7 +360,7 @@ const RoundDetails = ({ eventId, competitionId }: { eventId: number, competition
                                     <Button color='danger' variant='flat' onPress={() => handleClearRound(r.round)} isDisabled={i > 0 && !rounds[i-1].open}>Clear Round</Button> 
                                     // <Tooltip content='Already opened this round'><div className='inline-block'><Button color='success' variant='flat' isDisabled>Open Round</Button></div></Tooltip>}
                                 }
-                                {r.open ? <Button color='primary' variant='flat' as={Link} href={`/admin/scoretake/${competitionId}/${(r.event.maxAge ? `${r.event.event}-${r.event.maxAge}` : r.event.event)}/r${r.round}`}>Scoretake</Button> : <></>}
+                                {r.open ? <Button color='primary' variant='flat' as={Link} href={`/admin/scoretake/${competitionId}/${(r.event.maxAge ? `${r.event.event}-U${r.event.maxAge}` : r.event.event)}/r${r.round}`}>Scoretake</Button> : <></>}
                                 {/* {r.proceed ? <Button variant='flat'>Open Next Round</Button> : <></>} */}
                             </div>
                         ))

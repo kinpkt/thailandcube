@@ -22,7 +22,7 @@ export async function getRoundDetails({competitionId, event, round}: {competitio
 {
     const { withEvent = true, withResults = true } = options; 
 
-    const [eventType, maxAge] = event.split('-');
+    const [eventType, maxAge] = event.split('-U');
 
     try
     {
@@ -86,8 +86,9 @@ export async function getAllRoundsByEventId({eventId}: {eventId: number}, option
 
 export async function updateRound({eventId, roundNumber, roundData}: {eventId: number, roundNumber: number | undefined, roundData: Round})
 {
-    const { id, ... data } = roundData;
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { id, event, results, ...data } = roundData as any;
+    
     try
     {
         const rounds = await prisma.round.upsert(
@@ -107,7 +108,7 @@ export async function updateRound({eventId, roundNumber, roundData}: {eventId: n
                 create:
                 {
                     ...data as Round,
-                    eventId: data.eventId!,
+                    eventId: eventId!,
                     round: data.round!
                 }
             }

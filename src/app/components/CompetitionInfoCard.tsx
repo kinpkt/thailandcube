@@ -46,7 +46,7 @@ const CompetitionInfoCard = ({competition, isWCA}: {competition: Competition | n
 
         return (
             <>
-                <Card className='max-w-[400px] mx-auto mb-5'>
+                <Card className='w-full max-w-[400px] mx-auto mb-5'>
                     <CardHeader className='flex gap-3'>
                         {
                             isWCA ? (
