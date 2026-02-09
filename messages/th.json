@@ -51,10 +51,15 @@
         "wca": "การแข่งขันที่รับรองโดย WCA",
         "register": "สมัครการแข่งขัน",
         "details": "หน้าเว็บการแข่งขัน",
-        "schedule": "ตารางการแข่งขัน"
+        "schedule": "ตารางการแข่งขัน",
+        "results": "ตรวจสอบผลการแข่งขัน",
+        "view_results": "ดูผลการแข่งขัน",
+        "view_tournament": "ดูสายการแข่งขัน (Tournament)",
+        "round_not_open": "ยังไม่เปิดรอบการแข่งขัน"
     },
     "CompetitionSchedule":
     {
+        "schedule": "ตารางการแข่งขัน",
         "time": "เวลา",
         "activity": "กิจกรรม",
         "format": "รูปแบบ",

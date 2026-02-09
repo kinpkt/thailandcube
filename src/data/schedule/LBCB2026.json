@@ -1,101 +1,125 @@
 [
     {
-        "date": "วันเสาร์ที่ 28 กุมภาพันธ์ 2569"
+        "date_th": "วันเสาร์ที่ 28 กุมภาพันธ์ 2569",
+        "date_en": "Saturday, 28 February 2026"
     },
     {
         "time": "10:00 - 12:00",
-        "event": "Workshop สอนการแก้โจทย์รูบิก"
+        "event_th": "Workshop สอนการแก้โจทย์รูบิก"
     },
     {
         "time": "12:00 - 13:00",
-        "event": "พักกลางวัน"
+        "event_th": "พักกลางวัน",
+        "event_en": "Lunch Break"
     },
     {
         "time": "13:00 - 14:30",
-        "event": "Workshop เทคนิคการซ้อมและศึกษาสูตร โดยโค้ชเอเชีย"
+        "event_th": "Workshop เทคนิคการซ้อมและศึกษาสูตร โดยโค้ชเอเชีย"
     },
     {
         "time": "14:30 - 15:00",
-        "event": "เริ่มการแข่งขันและอธิบายรูปแบบการแข่งขัน"    
+        "event_th": "เริ่มการแข่งขันและอธิบายรูปแบบการแข่งขัน"  
     },
     {
         "time": "15:00 - 16:20",
-        "event": "3x3x3 Cube รุ่น Open รอบที่ 1",
+        "event_th": "3x3x3 Cube รุ่น Open รอบที่ 1",
+        "event_en": "3x3x3 Cube (Open) Round 1",
         "format": "Average of 5",
         "time_limit": "2:00.00",
-        "ranking": "Top 32"
+        "ranking_th": "32 อันดับแรก",
+        "ranking_en": "Top 32 competitors"
     },
     {
         "time": "16:20 - 17:00",
-        "event": "3x3x3 Cube Head to Head รุ่น Open รอบ 32 คน",
+        "event_th": "3x3x3 Cube Head to Head รุ่น Open รอบ 32 คน",
+        "event_en": "3x3x3 Cube (Open) Head to Head Round (Stage of 32)",
         "format": "Best 3 of 5",
         "time_limit": "1:00.00",
-        "ranking": "แพ้คัดออก"
+        "ranking_th": "แพ้คัดออก",
+        "ranking_en": "Single Elimination"
     },
     {
         "time": "17:00 - 17:30",
-        "event": "3x3x3 Cube Head to Head รุ่น Open รอบ 16 คน",
+        "event_th": "3x3x3 Cube Head to Head รุ่น Open รอบ 16 คน",
+        "event_en": "3x3x3 Cube (Open) Head to Head Round (Stage of 16)",
         "format": "Best 5 of 7",
         "time_limit": "1:00.00",
-        "ranking": "แพ้คัดออก"
+        "ranking_th": "แพ้คัดออก",
+        "ranking_en": "Single Elimination"
     },
     {
         "time": "17:30 - 17:45",
-        "event": "3x3x3 Cube Head to Head รุ่น Open รอบ 8 คน",
+        "event_th": "3x3x3 Cube Head to Head รุ่น Open รอบ 8 คน",
+        "event_en": "3x3x3 Cube (Open) Head to Head Round (Quarterfinal Stage)",
         "format": "Best 5 of 7",
         "time_limit": "1:00.00",
-        "ranking": "แพ้คัดออก"
+        "ranking_th": "แพ้คัดออก",
+        "ranking_en": "Single Elimination"
     },
     {
         "time": "18:00 - 18:30",
-        "event": "3x3x3 Cube Head to Head รุ่น Open รอบ 4 คน",
+        "event_th": "3x3x3 Cube Head to Head รุ่น Open รอบ 4 คน",
+        "event_en": "3x3x3 Cube (Open) Head to Head Round (Semifinal and Final Stage)",
         "format": "Best 7 of 9",
         "time_limit": "1:00.00",
-        "ranking": "แพ้คัดออก"
+        "ranking_th": "แพ้คัดออก",
+        "ranking_en": "Single Elimination"
     },
     {
         "time": "18:45 - 19:00",
-        "event": "มอบรางวัล"
+        "event_th": "มอบรางวัล",
+        "event_en": "Awards"
     },
     {
-        "date": "วันอาทิตย์ที่ 1 มีนาคม 2569"
+        "date_th": "วันอาทิตย์ที่ 1 มีนาคม 2569",
+        "date_en": "Sunday, 1 March 2026"
     },
     {
         "time": "09:30 - 10:00",
-        "event": "เริ่มการแข่งขันและอธิบายรูปแบบการแข่งขัน"
+        "event_th": "เริ่มการแข่งขันและอธิบายรูปแบบการแข่งขัน"
     },
     {
         "time": "10:00 - 11:00",
-        "event": "3x3x3 Cube รุ่น U9, U12 และ U15 รอบที่ 1",
+        "event_th": "3x3x3 Cube รุ่น U9, U12 และ U15 รอบที่ 1",
+        "event_en": "3x3x3 Cube (U9, U12 and U15) Round 1",
         "format": "Average of 5",
         "time_limit": "2:00.00",
-        "ranking": "Top 16 ของแต่ละรุ่น"
+        "ranking_th": "16 อันดับแรก ของแต่ละรุ่น",
+        "ranking_en": "Top 8 competitors of each age group"
     },
         {
         "time": "11:00 - 12:00",
-        "event": "3x3x3 Cube รุ่น U9, U12 และ U15 รอบที่ 2",
+        "event_th": "3x3x3 Cube รุ่น U9, U12 และ U15 รอบที่ 2",
+        "event_en": "3x3x3 Cube (U9, U12 and U15) Round 2",
         "format": "Average of 5",
         "time_limit": "2:00.00",
-        "ranking": "Top 8 ของแต่ละรุ่น"
+        "ranking_th": "8 อันดับแรก ของแต่ละรุ่น",
+        "ranking_en": "Top 8 competitors of each age group"
     },
     {
         "time": "12:00 - 13:00",
-        "event": "พักกลางวัน"
+        "event_th": "พักกลางวัน",
+        "event_en": "Lunch Break"
     },
     {
         "time": "13:00 - 14:30",
-        "event": "3x3x3 Cube Head to Head รุ่น U9, U12 และ U15 รอบ 8 คน",
+        "event_th": "3x3x3 Cube Head to Head รุ่น U9, U12 และ U15 รอบ 8 คน",
+        "event_en": "3x3x3 Cube (U9, U12 and U15) Head to Head Round (Quarterfinal Stage)",
         "format": "Best 5 of 7",
-        "ranking": "แพ้คัดออก"
+        "ranking_th": "แพ้คัดออก",
+        "ranking_en": "Single Elimination"
     },
     {
         "time": "14:30 - 15:30",
-        "event": "3x3x3 Cube Head to Head รุ่น U9, U12 และ U15 รอบ 4 คน",
+        "event_th": "3x3x3 Cube Head to Head รุ่น U9, U12 และ U15 รอบ 4 คน",
+        "event_en": "3x3x3 Cube (U9, U12 and U15) Head to Head Round (Semifinal and Final Stage)",
         "format": "Best 5 of 7",
-        "ranking": "แพ้คัดออก"
+        "ranking_th": "แพ้คัดออก",
+        "ranking_en": "Single Elimination"
     },
     {
         "time": "16:00 - 16:15",
-        "event": "มอบรางวัล"
+        "event_th": "มอบรางวัล",
+        "event_en": "Awards"
     }
 ]

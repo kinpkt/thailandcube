@@ -51,10 +51,15 @@
         "wca": "WCA Competition",
         "register": "Register",
         "details": "More Details",
-        "schedule": "Schedule"
+        "schedule": "Schedule",
+        "results": "Results",
+        "view_results": "View Results",
+        "view_tournament": "View Tournament",
+        "round_not_open": "Round Not Open"
     },
     "CompetitionSchedule":
     {
+        "schedule": "Competition Schedule",
         "time": "Time",
         "activity": "Activity",
         "format": "Format",

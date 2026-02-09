@@ -5,24 +5,30 @@ import { prisma } from '@/lib/prisma';
 
 interface Options
 {
-    withEvent?: boolean
-    withRegistrations?: boolean
+    withEvent?: boolean;
+    withRound?: boolean;
+    withRegistrations?: boolean;
 }
 
 export async function getCompetition(competitionId: string, options: Options = {}) 
 {
-    const { withEvent = true, withRegistrations = true } = options; 
-
-    const queryRelations = {
-        events: withEvent,
-        registrations: withRegistrations
-    };
+    const { withEvent = true, withRound = false, withRegistrations = true } = options; 
 
     try 
     {
         return await prisma.competition.findUnique({
             where: { competitionId },
-            include: queryRelations
+            include:
+            {
+                registrations: withRegistrations,
+                events:
+                {
+                    include:
+                    {
+                        rounds: withRound,
+                    } 
+                }
+            }
         });
     } 
     catch (error) 

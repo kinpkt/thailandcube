@@ -17,6 +17,7 @@ const CompetitionDetails = ({competition}: {competition: any}) =>
                 <p className='text-xl'>{dateToRange(competition.startDate, competition.endDate)} @{competition.venue}</p>
                 <Button className='mt-5' color='success' variant='flat' as={Link} href='https://docs.google.com/forms/d/e/1FAIpQLSfizf8EuVAvcKO86AamWJyAEmjXgHHIT08LOvTG3cr6zz3exA/viewform?usp=header'>{t('CompetitionInfo.register')}</Button>
                 <Button className='mt-5 mx-5' color='warning' variant='flat' as={Link} href='#schedule'>{t('CompetitionInfo.schedule')}</Button>
+                <Button className='mt-5' color='secondary' variant='flat' as={Link} href='#results'>{t('CompetitionInfo.results')}</Button>
             </div>
         </>
     );

@@ -18,7 +18,6 @@ const Page = async () =>
     const apiUrl = `${process.env.WCA_URL}/api/v0/competitions?country_iso2=TH&start=${todayString}`;
 
     try {
-        console.log(`Fetching: ${apiUrl}`);
         const res = await axios.get(apiUrl);
         wcaCompetitions = res.data.map((comp: any) => ({
             ...comp,
@@ -26,8 +25,6 @@ const Page = async () =>
             startDate: new Date(comp.start_date), 
             endDate: new Date(comp.end_date)
         }));
-        console.log(`Found ${wcaCompetitions.length} competitions`);
-        console.log(wcaCompetitions);
     } catch (error) {
         console.error("Failed to fetch WCA competitions:", error);
         // Handle error gracefully (e.g., wcaCompetitions remains empty)
