@@ -2,6 +2,12 @@
     "Header":
     {
         "thailandcube": "ThailandCube",
+        "home": "Home",
+        "about": "About Us",
+        "activity": "Activities",
+        "resources": "Resources",
+        "statistics": "Statistics",
+        "faqs": "FAQs",
         "login": "Login",
         "login_with_wca": "Login with WCA",
         "dropdown": 
@@ -26,6 +32,11 @@
         "subheading": "Thailand's biggest speed cubing community",
         "our_activities": "Our Activities",
         "wca_competitions": "WCA Competitions in Thailand"
+    },
+    "Statistics":
+    {
+        "single": "Single",
+        "average": "Average"
     },
     "Profile":
     {

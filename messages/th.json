@@ -2,6 +2,12 @@
     "Header":
     {
         "thailandcube": "ชมรมลูกบาศก์ไทย",
+        "home": "หน้าหลัก",
+        "about": "เกี่ยวกับเรา",
+        "activity": "กิจกรรม",
+        "resources": "แหล่งข้อมูล",
+        "statistics": "สถิติ",
+        "faqs": "คำถามที่พบบ่อย",
         "login": "ล็อกอิน",
         "login_with_wca": "ล็อกอินด้วย WCA",
         "dropdown": 
@@ -26,6 +32,11 @@
         "subheading": "ศูนย์กลางคนรักการเล่น Speed cubing ของประเทศไทย",
         "our_activities": "กิจกรรมของชมรม",
         "wca_competitions": "การแข่งขันที่รับรองโดย WCA ในประเทศไทย"
+    },
+    "Statistics":
+    {
+        "single": "ประเภทเวลาเดี่ยว",
+        "average": "ประเภทเวลาเฉลี่ย"
     },
     "Profile":
     {

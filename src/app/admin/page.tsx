@@ -7,7 +7,7 @@ const Page = () =>
 {
     return (
         <>
-            <Card className='w-xl mx-auto'>
+            <Card className='w-[75%] mx-auto'>
                 <CardBody>
                     <Button as={Link} color='primary' variant='flat' onPress={() => signIn('wca')}><Image src='/img/wca.svg' width={30} height={30}/>Login with WCA</Button>
                 </CardBody>
