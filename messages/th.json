@@ -33,6 +33,22 @@
         "our_activities": "กิจกรรมของชมรม",
         "wca_competitions": "การแข่งขันที่รับรองโดย WCA ในประเทศไทย"
     },
+    "Resources":
+    {
+        "title": "แหล่งข้อมูล",
+        "solve_guide": "คู่มือวิธีการแก้รูบิก 3x3x3",
+        "wca_related": "แหล่งข้อมูลที่เกี่ยวข้องกับสมาคมลูกบาศก์โลก (WCA)",
+        "wca_comp_req": "ข้อกำหนดในการแข่งขันของสมาคมลูกบาศก์โลก (Competition Requirements)",
+        "wca_reg_guide": "กติกาแข่งขันและแนวปฏิบัติตามกติกาการแข่งขัน (WCA Regulations and Guidelines)",
+        "wca_comp_tutorial": "คู่มือวิธีการแข่งขันในการแข่งขันของสมาคมลูกบาศก์โลก (WCA Competition Tutorial)",
+        "judge_tutorial": "คู่มือการเป็นกรรมการสำหรับผู้ที่ไม่เคยเป็นกรรมการมาก่อน (Judging Tutorial for Newcomers)",
+        "translated_docs": "เอกสารแปลต่าง ๆ",
+        "wca_reg_guide_th": "กติกาการแข่งขันและแนวปฏิบัติตามกติกาการแข่งขันของสมาคมลูกบาศก์โลก ฉบับแปลภาษาไทย (WCA Regulations and Guidelines)",
+        "wca_comp_tutorial_th": "คู่มือวิธีการแข่งขันในการแข่งขันของสมาคมลูกบาศก์โลก ฉบับแปลภาษาไทย (WCA Competition Tutorial)",
+        "judge_tutorial_th": "คู่มือการเป็นกรรมการสำหรับผู้ที่ไม่เคยเป็นกรรมการมาก่อน ฉบับแปลภาษาไทย (Judging Tutorial for Newcomers)",
+        "other_docs": "เอกสาร / แหล่งข้อมูลอื่น ๆ",
+        "solving_guide": "คู่มือวิธีการแก้รูบิก 3x3x3 โดยชมรมลูกบาศก์ไทย"
+    },
     "Statistics":
     {
         "single": "ประเภทเวลาเดี่ยว",

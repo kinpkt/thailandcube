@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { ReactNode } from 'react';
 
 const IconWrapper = ({ children }: { children: ReactNode }) => (
-  <span className='flex-shrink-0 w-5 h-5'>{children}</span>
+    <span className='flex-shrink-0 w-5 h-5'>{children}</span>
 );
 
 const YoutubeIcon = () => (
