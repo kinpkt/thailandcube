@@ -38,6 +38,31 @@
         "single": "Single",
         "average": "Average"
     },
+    "FAQs":
+    {
+        "title": "Frequently Asked Questions (FAQs)",
+        "find_comps": "Where can I find the competitions?",
+        "how_to_register": "How do I register a competition?",
+        "how_to_register_ans": "We recommend you to read the registration instructions on the competition's website. Some competitions might have different details in registration process.",
+        "comp_process": "What do I need to do in a competition?",
+        "comp_process_ans": "You can learn more about those from",
+        "comp_process_ans_yt": "WCA Cubing Competition Tutorial by CubeHead",
+        "comp_process_ans_yt_url": "https://youtu.be/8dSuMG--wm8?si=3tnvm6e7Mrwfy4zE",
+        "comp_process_ans_pdf": "WCA Competition Tutorial",
+        "comp_process_ans_pdf_url": "https://documents.worldcubeassociation.org/edudoc/competitor-tutorial/tutorial.pdf",
+        "before_compete": "What do I need to bring on competition?",
+        "before_compete_ans": "You should bring your own puzzles, especially on the events that you registered. For first time competitors, please bring your documents or photos of documents (e.g. your national ID card, passport) in order to verify your identity.",
+        "judge_roles": "What is judge? What do I need to do?",
+        "judge_roles_ans": "Your duty as a judge is to make sure that competitors' solves are going according to WCA Regulations and to determine if there must be a penalty or not. You can learn more from",
+        "judge_roles_ans_yt": "How To Judge At A Speedcubing Competition by Tingman",
+        "judge_roles_ans_yt_url": "https://youtu.be/BUZ4hZ_40Q0?si=lR5JuKvX4wjDx4sA",
+        "judge_roles_ans_pdf": "Judging Tutorial for Newcomers",
+        "judge_roles_ans_pdf_url": "https://documents.worldcubeassociation.org/edudoc/judge-tutorial/judge-tutorial.pdf",
+        "receive_wca_id": "After finish competing, how can I receive my WCA ID?",
+        "receive_wca_id_ans": "Your WCA ID will be linked to your account after the result has been uploaded to the website. (may took around 1 - 7 days after the competition has ended)",
+        "local_comp": "I want more local competitions on other provinces!",
+        "local_comp_ans": "Please read the competition requirements and organizers guidelines in WCA website first, if you have a desired venue and are able to organize the competition on that venue, please contact our WCA Delegate to continue the proceedure."
+    },
     "Profile":
     {
         
