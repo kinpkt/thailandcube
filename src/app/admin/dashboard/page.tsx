@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { getUserRole } from '@/app/actions/users';
 import { Spinner } from '@heroui/react';
-// import Dashboard from '@/app/components/Dashboard';
+import Dashboard from '@/app/components/Dashboard';
 import { Role } from '@prisma/client';
 
 const Page = () =>
@@ -27,7 +27,6 @@ const Page = () =>
         {
             try
             {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const role = await getUserRole(Number(session.user.id));
 
                 setIsAdmin(role === Role.SUPERUSER || role === Role.ADMIN);
@@ -63,7 +62,7 @@ const Page = () =>
 
     return (
         <div className='mx-auto'>
-            {/* <Dashboard /> */}
+            <Dashboard />
         </div>
     );
 }

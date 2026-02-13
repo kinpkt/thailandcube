@@ -93,7 +93,7 @@ model Registration {
 model RegistrationEvent {
   id                Int             @id @default(autoincrement())
   registrationId    Int             @map("registration_id")
-  registration      Registration    @relation(fields: [registrationId], references: [id])
+  registration      Registration    @relation(fields: [registrationId], references: [id], onDelete: Cascade)
   eventId           Int             @map("event_id")
   event             Event           @relation(fields: [eventId], references: [id])
 
@@ -136,7 +136,7 @@ model Round {
   eventId           Int      @map("event_id")
   event             Event    @relation(fields: [eventId], references: [id])
   round             Int
-  timeLimit         Float    @map("time_limit")
+  timeLimit         Float    @default(600.0) @map("time_limit")
   cutoff            Float?
   proceed           Float?
   tournamentUrl     String?  @map("tournament_url")

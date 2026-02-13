@@ -1,19 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getRoundDetails } from '@/app/actions/rounds';
-import { getCompetitorsInRound } from '@/app/actions/competitors';
 import ScoretakerPanel from '@/app/components/ScoretakerPanel';
+import { getRoundResults } from '@/app/actions/results';
+import { getCompetitorsInRound } from '@/app/actions/competitors';
 import { EventType } from '@prisma/client';
 
 const Page = async ({ params }: {params: Promise<{competitionId: string, event: string, round: string}>}) =>
 {
     const { competitionId, event, round } = await params;
+    const [eventType, maxAge] = event.split('-U');
     const roundNumber = Number(round.slice(1));
 
-    const resultsData = (await getCompetitorsInRound({competitionId, event: event as EventType, round: roundNumber})) ?? [];
-    const roundDetail = (await getRoundDetails({competitionId, event: event as EventType, round: roundNumber})) ?? null;
+    const resultsData = (await getCompetitorsInRound({
+        competitionId, 
+        event: eventType as EventType,
+        maxAge: Number(maxAge),
+        round: roundNumber
+    }, {withRegistrations: true})) ?? { valued: [], blank: [] };
+
+    const roundDetails = (await getRoundDetails({competitionId, event, round: roundNumber})) ?? null;
 
     return (
         <>
-            {/* <ScoretakerPanel results={resultsData} eventDetail={roundDetail}/> */}
+            <ScoretakerPanel results={resultsData as any} roundDetails={roundDetails}/>
         </>
     );
 }

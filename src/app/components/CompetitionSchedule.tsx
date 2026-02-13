@@ -7,14 +7,15 @@ import { Competition } from '@prisma/client';
 import { dateToRange } from '@/lib/DateTimeFormatter';
 
 type ScheduleItem = {
-    date?: string;
+    date_th?: string;
+    date_en?: string;
     time?: string;
-    event?: string;
-    eventTH?: string;
-    eventEN?: string;
+    event_th?: string;
+    event_en?: string;
     format?: string;
     time_limit?: string;
-    ranking?: string;
+    ranking_th?: string;
+    ranking_en?: string;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -25,7 +26,7 @@ const CompetitionSchedule = ({competition}: {competition: any}) =>
 
     return (
         <>
-            <h1 className='text-3xl my-5' id='schedule'>ตารางการแข่งขัน</h1>
+            <h1 className='text-3xl my-5' id='schedule'>{t('schedule')}</h1>
             <Table className='w-[75%] mx-auto' aria-label='Schedule Table' isStriped>
                 <TableHeader>
                     <TableColumn>{t('time')}</TableColumn>
@@ -37,7 +38,7 @@ const CompetitionSchedule = ({competition}: {competition: any}) =>
                 <TableBody>
                     {(LBCB2026 as ScheduleItem[]).map((item, index) => {
                         // 1. If it's a Date Header Row
-                        if (item.date) {
+                        if (item[`date_${locale}` as keyof ScheduleItem]) {
                             return (
                                 <TableRow key={index} className='bg-primary-100'>
                                     {/* We make one cell specific for the date */}
@@ -49,7 +50,7 @@ const CompetitionSchedule = ({competition}: {competition: any}) =>
                                         However, here is the cleanest visual approach:
                                     */}
                                     <TableCell className='font-bold text-black text-lg' colSpan={5}>
-                                        {item.date}
+                                        {item[`date_${locale}` as keyof ScheduleItem]}
                                     </TableCell>
                                 </TableRow>
                             );
@@ -64,7 +65,7 @@ const CompetitionSchedule = ({competition}: {competition: any}) =>
                                 
                                 <TableCell>
                                     <div className='flex flex-col'>
-                                        <span className='font-bold'>{item.event}</span>
+                                        <span className='font-bold'>{item[`event_${locale}` as keyof ScheduleItem] ?? item.event_th}</span>
                                         {/* Handle event_2 if it exists */}
                                         {/* {item.event_2 && (
                                             <span className='text-xs text-default-500'>
@@ -83,7 +84,7 @@ const CompetitionSchedule = ({competition}: {competition: any}) =>
                                 </TableCell>
                                 
                                 <TableCell className='text-xs'>
-                                    {item.ranking || '-'}
+                                    {item[`ranking_${locale}` as keyof ScheduleItem] || '-'}
                                 </TableCell>
                             </TableRow>
                         );

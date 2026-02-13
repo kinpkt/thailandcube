@@ -20,6 +20,13 @@
         "contact_us": "ติดต่อเราที่",
         "forms_text": "หรือติดต่อผ่านทาง"
     },
+    "HomePage":
+    {
+        "heading": "ยินดีต้อนรับสู่ ThailandCube",
+        "subheading": "ศูนย์กลางคนรักการเล่น Speed cubing ของประเทศไทย",
+        "our_activities": "กิจกรรมของชมรม",
+        "wca_competitions": "การแข่งขันที่รับรองโดย WCA ในประเทศไทย"
+    },
     "Profile":
     {
         
@@ -30,10 +37,13 @@
     },
     "ResultTable":
     {
+        "round": "รอบที่",
+        "max_age": "รุ่นอายุไม่เกิน",
         "name": "ชื่อ",
         "region": "สัญชาติ",
         "average": "เวลาเฉลี่ย",
-        "best": "ดีที่สุด"
+        "best": "ดีที่สุด",
+        "no_results": "ขณะนี้ยังไม่มีผลการแข่งขัน"
     },
     "CompetitionInfo":
     {
@@ -41,10 +51,15 @@
         "wca": "การแข่งขันที่รับรองโดย WCA",
         "register": "สมัครการแข่งขัน",
         "details": "หน้าเว็บการแข่งขัน",
-        "schedule": "ตารางการแข่งขัน"
+        "schedule": "ตารางการแข่งขัน",
+        "results": "ตรวจสอบผลการแข่งขัน",
+        "view_results": "ดูผลการแข่งขัน",
+        "view_tournament": "ดูสายการแข่งขัน (Tournament)",
+        "round_not_open": "ยังไม่เปิดรอบการแข่งขัน"
     },
     "CompetitionSchedule":
     {
+        "schedule": "ตารางการแข่งขัน",
         "time": "เวลา",
         "activity": "กิจกรรม",
         "format": "รูปแบบ",
