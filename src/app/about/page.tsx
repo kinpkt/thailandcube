@@ -1,11 +1,13 @@
 'use client';
 
 import { Card, CardHeader, CardBody, CardFooter, Image } from '@heroui/react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import AboutOurMembers from '../components/AboutOurMembers';
 
 const Page = () =>
 {
     const t = useTranslations('About');
+    const locale = useLocale();
 
     return (
         <>
@@ -30,10 +32,7 @@ const Page = () =>
                     </CardBody>
                 </Card>
             </div>
-            
-            {/* <div className='mt-5 mx-24'>
-                <p className='text-4xl font-bold'>ทีมงานของเรา</p>
-            </div> */}
+            <AboutOurMembers locale={locale}/>            
         </>
     );
 }
