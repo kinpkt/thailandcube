@@ -11,6 +11,7 @@ import { formattedToNum, numToFormatted } from '@/lib/DateTimeFormatter';
 import { createEvent, getAllEventsByCompetitionId } from '@/app/actions/events';
 import CompetitorManager from '@/app/components/CompetitorManager';
 import { clearRoundResult } from '../actions/results';
+import AdminNRManager from './AdminNRManager';
 
 interface ExtendedEvent extends Event
 {
@@ -61,6 +62,9 @@ const Dashboard = () =>
                         }
                     </CardBody>
                 </Card>
+                <div className='lg:col-span-2 flex justify-center'>
+                    <AdminNRManager/>
+                </div>
             </div>
         </>
     );

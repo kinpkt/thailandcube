@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Prompt } from 'next/font/google';
+import { Prompt, Kanit } from 'next/font/google';
 import { Providers } from './providers';
 import Header from './components/Header';
 import '../../node_modules/flag-icons/css/flag-icons.min.css';
@@ -12,6 +12,11 @@ const prompt = Prompt({
     subsets: ['latin', 'thai'],
     weight: ['400', '500', '600']
 });
+
+// const kanit = Kanit({
+//     subsets: ['latin', 'thai'],
+//     weight: ['400', '500', '600']
+// });
 
 export const metadata: Metadata = {
     title: 'ThailandCube',

@@ -167,6 +167,7 @@ model Result {
 model NationalRecord {
   id              Int         @id @default(autoincrement())
   holder          String
+  competition     String
   caption         String?
   event           EventType
   result          String
