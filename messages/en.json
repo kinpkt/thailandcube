@@ -33,6 +33,14 @@
         "our_activities": "Our Activities",
         "wca_competitions": "WCA Competitions in Thailand"
     },
+    "About":
+    {
+        "title": "About Us",
+        "speedcubing_heading": "What is Speedcubing?",
+        "speedcubing_content": "Speedcubing is a competition to solve twisty puzzles, where the fastest solver is be the winner. An example of a well-known puzzle is a 3x3x3 Cube (AKA the Rubik's Cube). Speedcubing is not just about only for competing. However, playing Speedcubing is not just for competing. It helps players develop various skills, such as observation, short- and long-term memory, concentration, patience, fine and gross motor skills, and coordination between the eyes, hands, and brain. Moreover, Speedcubing is not limited to children; people of all ages can play. For adults, playing Speedcubing can even help prevent memory-related conditions such as Alzheimer’s disease.",
+        "thailandcube_content": "ThailandCube was founded in July 2007 by Mr. Chatchawan Jaruwattanakun. Since its inception, our club has organized various activities related to Speedcubing, such as meetings and unofficial competitions within Thailand. In 2009, our club held its first official Speedcubing competition, recognized by the World Cube Association (WCA), with Mr. Chatchawan becoming Thailand's first WCA Delegate.",
+        "wca_delegates": "WCA Delegate(s)"
+    },
     "Resources":
     {
         "title": "Resources",
