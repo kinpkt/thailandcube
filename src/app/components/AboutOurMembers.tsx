@@ -49,7 +49,7 @@ const staffData: StaffMember[] = [
         name_en: 'Phumiphat Rungvichaniwat',
         name_th: 'ภูมิพัฒน์ รุ่งวิชานิวัฒน์',
         role_en: 'Communications and Public Relations',
-        role_th: 'ฝ่ายสื่อสารองค์กรและประชาสัมพันธ์',
+        role_th: 'ฝ่ายประชาสัมพันธ์และสื่อสารองค์กร',
         imageUrl: 'https://avatars.worldcubeassociation.org/esd7zwpedswpsshbbimq5p1iksm6',
     },
 ];
@@ -78,12 +78,12 @@ const AboutOurMembers = ({locale}: {locale: string}) =>
                         />
                         <CardFooter className='absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100'>
                             <div className='flex flex-col items-start w-full overflow-hidden'>
+                                <p className='text-white font-medium text-lg w-full truncate text-left'>
+                                    {staff[`name_${locale}` as keyof StaffMember]}
+                                </p>
                                 <p className='text-tiny text-white/70 uppercase font-bold w-full truncate text-left'>
                                     {staff[`role_${locale}` as keyof StaffMember]}
                                 </p>
-                                <h4 className='text-white font-medium text-lg w-full truncate text-left'>
-                                    {staff[`name_${locale}` as keyof StaffMember]}
-                                </h4>
                             </div>
                         </CardFooter>
                     </Card>

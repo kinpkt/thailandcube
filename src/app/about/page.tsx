@@ -32,7 +32,7 @@ const Page = () =>
                     </CardBody>
                 </Card>
             </div>
-            <AboutOurMembers locale={locale}/>            
+            {/* <AboutOurMembers locale={locale}/> */}
         </>
     );
 }
