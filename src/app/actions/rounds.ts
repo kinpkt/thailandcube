@@ -1,6 +1,6 @@
 'use server';
 
-import { EventType, Round } from '@prisma/client';
+import { EventType, ResultStatus, Round } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { getEventByCompetitionId } from './events';
 import { getRoundResults } from './results';
@@ -242,9 +242,11 @@ export async function openRound({competitionId, eventId, roundNumber}: {competit
 
             const {valued, blank} = await getRoundResults({competitionId, event: eventString, round: roundNumber-1});
 
+            const filtered = valued.filter((result) => result.status !== ResultStatus.DROPOUT);
+
             const threshold = Number.isInteger(previousRoundDetails?.proceed) ? previousRoundDetails?.proceed : Math.floor(valued.length*(previousRoundDetails?.proceed ?? 0));
 
-            const passedCompetitors = valued.slice(0, threshold!);
+            const passedCompetitors = filtered.slice(0, threshold!);
 
             const resultsData = passedCompetitors.map((competitor) => (
                 {

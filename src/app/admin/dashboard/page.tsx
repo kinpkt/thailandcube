@@ -62,7 +62,7 @@ const Page = () =>
 
     return (
         <div className='mx-auto'>
-            <Dashboard />
+            <Dashboard/>
         </div>
     );
 }

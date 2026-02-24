@@ -1,7 +1,7 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
-import { Event, EventType, Round } from '@prisma/client';
+import { Event, EventType, Result, Round } from '@prisma/client';
 
 interface ScoretakeData
 {
@@ -173,6 +173,32 @@ export async function clearRoundResult({competitionId, eventId, round}: {competi
         }
     }
     catch (error) 
+    {
+        console.error('Database Error:', error);
+        return null;
+    }
+}
+
+export async function updateResultStatus(result: Result)
+{
+    try
+    {
+        await prisma.result.update(
+            {
+                where:
+                {
+                    id: result.id,
+                },
+                data:
+                {
+                    status: result.status,
+                }
+            }
+        );
+
+        return true;
+    }
+    catch (error)
     {
         console.error('Database Error:', error);
         return null;

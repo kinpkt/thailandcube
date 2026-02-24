@@ -5,7 +5,8 @@
     },
     {
         "time": "10:00 - 12:00",
-        "event_th": "Workshop สอนการแก้โจทย์รูบิก"
+        "event_th": "Workshop สอนการแก้โจทย์รูบิก",
+        "event_en": "\"How to solve the Rubik's Cube\" Workshop"
     },
     {
         "time": "12:00 - 13:00",
@@ -14,11 +15,13 @@
     },
     {
         "time": "13:00 - 14:30",
-        "event_th": "Workshop เทคนิคการซ้อมและศึกษาสูตร โดยโค้ชเอเชีย"
+        "event_th": "Workshop เทคนิคการซ้อมและศึกษาสูตร โดยโค้ชเอเชีย",
+        "event_en": "\"Practice techniques and cubing algorithm study\" Workshop"
     },
     {
         "time": "14:30 - 15:00",
-        "event_th": "เริ่มการแข่งขันและอธิบายรูปแบบการแข่งขัน"  
+        "event_th": "เริ่มการแข่งขันและอธิบายรูปแบบการแข่งขัน",
+        "event_en": "Competition Format Explanation"
     },
     {
         "time": "15:00 - 16:20",
@@ -76,7 +79,8 @@
     },
     {
         "time": "09:30 - 10:00",
-        "event_th": "เริ่มการแข่งขันและอธิบายรูปแบบการแข่งขัน"
+        "event_th": "เริ่มการแข่งขันและอธิบายรูปแบบการแข่งขัน",
+        "event_en": "Competition Format Explanation"
     },
     {
         "time": "10:00 - 11:00",

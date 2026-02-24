@@ -20,27 +20,31 @@ import {
 import { numToFormatted, formattedToNum } from '@/lib/DateTimeFormatter';
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Event, EventType, Round, Result, Competitor, Registration } from '@prisma/client';
+import { Event, EventType, Round, Result, Competitor, Registration, ResultStatus } from '@prisma/client';
 import { calculateAo5, calculateBo3 } from '@/lib/Calculation';
 import { EventCodeToFullMap } from '@/lib/EnumMapping';
-import { CheckIcon } from '@heroicons/react/16/solid';
-import { submitRoundResult } from '../actions/results';
+import { CheckIcon, XCircleIcon } from '@heroicons/react/16/solid';
+import { submitRoundResult, updateResultStatus } from '../actions/results';
 
-type RoundWithEventInfo = Round & {
+type RoundWithEventInfo = Round & 
+{
     event: Event
 }
 
-type ResultWithCompetitor = Result & {
+type ResultWithCompetitor = Result & 
+{
     rank?: number;
     competitor: Competitor & {registrations: Registration[]};
 }
 
-interface ScoretakerPanelProps {
+interface ScoretakerPanelProps 
+{
     results: ResultWithCompetitor[] | {valued: ResultWithCompetitor[], blank: ResultWithCompetitor[]};
     roundDetails: RoundWithEventInfo | null;
 }
 
-interface ExtendedCompetitor extends Competitor {
+interface ExtendedCompetitor extends Competitor 
+{
     rank?: number;
     formattedString: string;
     registrationId: number | string;
@@ -49,46 +53,31 @@ interface ExtendedCompetitor extends Competitor {
 const ScoretakerPanel = ({ results: rawResults, roundDetails }: ScoretakerPanelProps) => {
     const router = useRouter();
 
-    // 1. ROBUST DATA NORMALIZATION
-    // This fixes the crash by handling both Flat Arrays (old) and Split Objects (new)
     const { valued, blank } = useMemo(() => {
-        // Handle null/undefined
         if (!rawResults) return { valued: [], blank: [] };
 
         let flatList: ResultWithCompetitor[] = [];
 
-        // Check if it's the new Object format ({ valued: [...], blank: [...] })
-        if ('valued' in rawResults && Array.isArray((rawResults as any).valued)) {
-            // Merge them first so we can re-sort everything according to your specific logic
+        if ('valued' in rawResults && Array.isArray((rawResults as any).valued)) 
+        {
             const objResults = rawResults as { valued: ResultWithCompetitor[], blank: ResultWithCompetitor[] };
             flatList = [...objResults.valued, ...objResults.blank];
         }
-        // Fallback: Handle Flat Array (Old Format)
-        else if (Array.isArray(rawResults)) {
+        else if (Array.isArray(rawResults)) 
             flatList = rawResults as ResultWithCompetitor[];
-        }
 
-        // Apply Sorting Logic
         return {
-            // 1. Positive Reals (standard ascending sort)
             valued: flatList
                 .filter(r => r.result !== null && r.result > 0)
                 .sort((a, b) => Number(a.result) - Number(b.result)),
 
-            // 2. Negatives (tiebreak by best) then Nulls
             blank: flatList
                 .filter(r => r.result === null || r.result <= 0)
                 .sort((a, b) => {
-                    // Step A: Separate defined values (negatives) from nulls
-                    // If a.result is a number (<=0) and b.result is null, A comes first
                     if (a.result !== null && b.result === null) return -1;
                     if (a.result === null && b.result !== null) return 1;
                     if (a.result === null && b.result === null) return 0;
 
-                    // Step B: Both are Negative numbers (DNF/DNS/etc)
-                    // Tiebreak using the 'best' field (Ascending: lower best is better)
-                    
-                    // Normalize 'best': if best is <= 0 or null, treat it as Infinity for sorting
                     const bestA = (a.best !== null && a.best > 0) ? a.best : Infinity;
                     const bestB = (b.best !== null && b.best > 0) ? b.best : Infinity;
 
@@ -97,12 +86,10 @@ const ScoretakerPanel = ({ results: rawResults, roundDetails }: ScoretakerPanelP
         };
     }, [rawResults]);
 
-    // 2. Derive combined list for Autocomplete and Table
     const allResults = useMemo(() => [...valued, ...blank], [valued, blank]);
 
     const [competitors, setCompetitors] = useState<ExtendedCompetitor[]>([]);
 
-    // Update competitors when data changes (wrapped in useEffect to avoid hydration mismatches)
     useEffect(() => {
         setCompetitors(
             allResults
@@ -124,7 +111,6 @@ const ScoretakerPanel = ({ results: rawResults, roundDetails }: ScoretakerPanelP
 
     const [competitorId, setCompetitorId] = useState<number | null>(null);
     
-    // ... [Input States - No Changes Needed] ...
     const [a1, setA1] = useState<string>('');
     const [disabledA1, setDisabledA1] = useState<boolean>(false);
     const [a2, setA2] = useState<string>('');
@@ -139,42 +125,66 @@ const ScoretakerPanel = ({ results: rawResults, roundDetails }: ScoretakerPanelP
 
     const isBlindfolded = roundDetails?.event.event === EventType.E333BF;
 
-    // ... [Handle Enter/Keys - No Changes Needed] ...
-    const handleEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleEnter = (event: React.KeyboardEvent<HTMLInputElement>) => 
+    {
         const form = event.currentTarget.closest('form');
-        if (!form) return;
+        if (!form) 
+            return;
         const focusableElements = Array.from(form.querySelectorAll(`input:not([disabled]), button[type='submit']`)) as HTMLElement[];
         const currentIndex = focusableElements.indexOf(event.currentTarget);
-        if (event.key === 'Enter') {
+        if (event.key === 'Enter') 
+        {
             let nextIndex = currentIndex + 1;
-            if (disabledCutoff && currentIndex === 3 && roundDetails?.cutoff && !isBlindfolded) nextIndex = focusableElements.length - 1;
-            if (isBlindfolded) {
+            if (disabledCutoff && currentIndex === 3 && roundDetails?.cutoff && !isBlindfolded) 
+                nextIndex = focusableElements.length - 1;
+
+            if (isBlindfolded) 
+            {
                 const time = [formattedToNum(a1), formattedToNum(a2), formattedToNum(a3)];
                 const timeSum = time.reduce((a, b) => a + b, 0);
                 const valSetters = [setA1, setA2, setA3, setA4, setA5];
-                if (!time.some(t => t < 0)) {
-                    if (timeSum >= roundDetails.timeLimit) {
+                if (!time.some(t => t < 0)) 
+                {
+                    if (timeSum >= roundDetails.timeLimit) 
+                    {
                         nextIndex = focusableElements.length - 1; 
                         const attemptIndex = currentIndex - 1; 
-                        for (let i = attemptIndex - 2; i < 3; i++) {
-                            if(i >= 0 && i < valSetters.length) valSetters[i]('DNS');
+                        for (let i = attemptIndex - 2; i < 3; i++) 
+                        {
+                            if (i >= 0 && i < valSetters.length) 
+                                valSetters[i]('DNS');
                         }
-                        if(attemptIndex - 2 >= 0) valSetters[attemptIndex - 2]('DNF');
+                        if (attemptIndex - 2 >= 0) 
+                            valSetters[attemptIndex - 2]('DNF');
                     }
                 }
             }
-            if (nextIndex < focusableElements.length) focusableElements[nextIndex]?.focus();
+            if (nextIndex < focusableElements.length) 
+                focusableElements[nextIndex]?.focus();
             event.preventDefault();
-        } else if (event.key === '/' || event.key === '*') {
+        } 
+        else if (event.key === '/' || event.key === '*') 
+        {
             event.preventDefault();
             const value = event.key === '/' ? 'DNF' : 'DNS';
             const index = focusableElements.indexOf(event.currentTarget);
-            switch (index) {
-                case 1: setA1(value); break;
-                case 2: setA2(value); break;
-                case 3: setA3(value); break;
-                case 4: setA4(value); break;
-                case 5: setA5(value); break;
+            switch (index) 
+            {
+                case 1: 
+                    setA1(value); 
+                    break;
+                case 2: 
+                    setA2(value); 
+                    break;
+                case 3: 
+                    setA3(value); 
+                    break;
+                case 4: 
+                    setA4(value); 
+                    break;
+                case 5: 
+                    setA5(value); 
+                    break;
             }
         }
     };
@@ -186,7 +196,6 @@ const ScoretakerPanel = ({ results: rawResults, roundDetails }: ScoretakerPanelP
             const id = Number(key);
             setCompetitorId(id);
             clearFields();
-            // Search in normalized `allResults`
             const oldResult = allResults.find((r) => r.competitor.id === id)?.attempts;
 
             if (oldResult && oldResult?.length > 0) 
@@ -288,6 +297,19 @@ const ScoretakerPanel = ({ results: rawResults, roundDetails }: ScoretakerPanelP
             return `(U${maxAge})`;
     }
 
+    const handleQuitProceed = async (result: Result) => 
+    {
+        const newResult = result;
+        newResult.status = ResultStatus.DROPOUT;
+
+        const success = await updateResultStatus(newResult);
+
+        if (success)
+            addToast({title: 'ปรับสถานะสำเร็จ', color: 'success', icon: (<CheckIcon/>)})
+        else
+            addToast({title: 'เกิดข้อผิดพลาด', color: 'danger', icon: (<XCircleIcon/>)})
+    }
+
     useEffect(() => 
     {
         if (!localStorage.getItem('username')) 
@@ -303,7 +325,8 @@ const ScoretakerPanel = ({ results: rawResults, roundDetails }: ScoretakerPanelP
             setDisabledCutoff((formattedToNum(a1) <= -1 && formattedToNum(a2) <= -1) || (formattedToNum(a1) >= roundDetails.cutoff && formattedToNum(a2) >= roundDetails.cutoff));
     }, [a1, a2, roundDetails]);
 
-    useEffect(() => {
+    useEffect(() => 
+    {
         if (roundDetails?.event.event === EventType.E333BF) {
             const time = [formattedToNum(a1), formattedToNum(a2), formattedToNum(a3)];
             const attemptsCount = time.filter(t => t > 0).length;
@@ -318,21 +341,22 @@ const ScoretakerPanel = ({ results: rawResults, roundDetails }: ScoretakerPanelP
         }
     }, [a1, a2, a3, roundDetails]);
 
-    if (!rawResults) return null; // Safe exit
+    if (!rawResults) 
+        return null;
 
-    const filterCompetitors = (textValue: string, inputValue: string) => {
+    const filterCompetitors = (textValue: string, inputValue: string) => 
+    {
         if (!textValue) return false;
         return textValue.toLowerCase().includes(inputValue.toLowerCase());
     };
 
-    // Calculate proceeding count based on VALID results count or TOTAL? 
-    // Usually based on total participants.
     const totalParticipants = valued.length + blank.length;
+    const totalQuit = valued.filter((result) => result.status === ResultStatus.DROPOUT).length;
     let proceedingCount = roundDetails?.proceed ? 0 : 3;
     if (roundDetails?.proceed && Number.isInteger(roundDetails?.proceed))
-        proceedingCount = roundDetails?.proceed;
+        proceedingCount = roundDetails?.proceed + totalQuit;
     else if (roundDetails?.proceed)
-        proceedingCount = Math.floor(roundDetails?.proceed * totalParticipants);
+        proceedingCount = Math.floor(roundDetails?.proceed * totalParticipants) + totalQuit;
 
     return (
         <div className='w-full p-6'>
@@ -391,11 +415,10 @@ const ScoretakerPanel = ({ results: rawResults, roundDetails }: ScoretakerPanelP
                             {!isBlindfolded ? <TableColumn>5</TableColumn> : <TableColumn className='hidden'>5</TableColumn>}
                             {!isBlindfolded ? <TableColumn>Average</TableColumn> : <TableColumn className='hidden'>Avg</TableColumn>}
                             <TableColumn>Best</TableColumn>
+                            <TableColumn>{''}</TableColumn>
                         </TableHeader>
                         <TableBody emptyContent={'No Results'}>
-                            {/* USE allResults here (Safe combined array) */}
                             {allResults.map((result, i) => {
-                                // 3. DETERMINE RANKING STATUS based on normalized lists
                                 const isValued = result.best !== null;
                                 let rank = i + 1;
                                 let isPassing = false;
@@ -403,7 +426,6 @@ const ScoretakerPanel = ({ results: rawResults, roundDetails }: ScoretakerPanelP
                                 if (isValued) {
                                     if (i > 0) {
                                         const prev = allResults[i - 1];
-                                        // Rank checks
                                         if (prev.result && prev.result === result.result && prev.best === result.best) {
                                             rank = prev.rank!;
                                         }
@@ -414,7 +436,7 @@ const ScoretakerPanel = ({ results: rawResults, roundDetails }: ScoretakerPanelP
 
                                 const cellTextColor = isValued ? '' : 'text-default-400';
                                 const rankDisplay = isValued ? (
-                                    <div className={`w-8 h-8 flex items-center justify-center rounded-full ${isPassing ? 'bg-success-100 text-success-600 font-bold' : ''}`}>
+                                    <div className={`w-8 h-8 flex items-center justify-center rounded-full ${isPassing && result.status === ResultStatus.ACTIVE ? 'bg-success-100 text-success-600 font-bold' : ''}`}>
                                         {rank}
                                     </div>
                                 ) : (
@@ -432,7 +454,8 @@ const ScoretakerPanel = ({ results: rawResults, roundDetails }: ScoretakerPanelP
                                         {!isBlindfolded ? <TableCell className={cellTextColor}>{result.attempts[3] === 0 ? '' : numToFormatted(result.attempts[3], true)}</TableCell> : <></>}
                                         {!isBlindfolded ? <TableCell className={cellTextColor}>{result.attempts[4] === 0 ? '' : numToFormatted(result.attempts[4], true)}</TableCell> : <></>}
                                         {!isBlindfolded ? <TableCell className={`font-semibold ${cellTextColor}`}>{result.result ? numToFormatted(result.result) : ''}</TableCell> : <></>}
-                                        <TableCell className={`font-bold ${cellTextColor}`}>{result.best ? numToFormatted(result.best) : ''}</TableCell>
+                                        <TableCell className={cellTextColor}>{result.best ? numToFormatted(result.best) : ''}</TableCell>
+                                        <TableCell className={`font-bold ${cellTextColor}`}><Button color='danger' variant='flat' onPress={() => handleQuitProceed(result)} isIconOnly isDisabled={!isValued}><XCircleIcon className='w-5 h-5'/></Button></TableCell>
                                     </TableRow>
                                 );
                             })}
