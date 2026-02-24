@@ -5,7 +5,7 @@ import { Card, CardHeader, CardBody, CardFooter, Select, SelectItem, Spinner, Bu
 import { Competition, Event, EventType, Format, RegistrationEvent, Round } from '@prisma/client';
 import { getAllCompetitions } from '@/app/actions/competitions';
 import { getAllRoundsByEventId, openRound, updateRound } from '@/app/actions/rounds';
-import { LinkIcon, ClockIcon, ScissorsIcon, NumberedListIcon, HashtagIcon, CheckIcon, PencilIcon, PencilSquareIcon } from '@heroicons/react/16/solid';
+import { LinkIcon, ClockIcon, ScissorsIcon, NumberedListIcon, HashtagIcon, CheckIcon, PencilIcon, PencilSquareIcon, DocumentTextIcon } from '@heroicons/react/16/solid';
 import { EventCodeToFullMap, FormatCodeToFullMap } from '@/lib/EnumMapping';
 import { formattedToNum, numToFormatted } from '@/lib/DateTimeFormatter';
 import { createEvent, getAllEventsByCompetitionId } from '@/app/actions/events';
@@ -42,6 +42,9 @@ const Dashboard = () =>
 
     return (
         <>
+            <div className='mx-auto mb-5 justify-center flex'>
+                <Button variant='flat' color='secondary' href='https://drive.google.com/file/d/16dyyCUJ3vV_ixPjKuxge8lKkW3gI0ISd/view?usp=sharing' as={Link}>คู่มือการใช้งาน<DocumentTextIcon className='w-5 h-5'/></Button>
+            </div>
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
                 <CompetitorManager/>
                 <Card className='mx-auto w-lg'>
