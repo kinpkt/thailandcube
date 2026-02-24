@@ -413,7 +413,7 @@ const RoundDetails = ({ eventId, competitionId }: { eventId: number, competition
                                     label='Time Limit'
                                     placeholder='Ex. 10:00.00'
                                     variant='bordered'
-                                    value={formData?.timeLimit?.toString() || ''}
+                                    value={numToFormatted(formData?.timeLimit) || ''}
                                     onValueChange={(val) => handleInputChange('timeLimit', val)}
                                 />
                                 <Input

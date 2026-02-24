@@ -16,11 +16,13 @@ interface ResultTableRoute
     roundNumber: number;
 }
 
-type RoundWithEventInfo = Round & {
+type RoundWithEventInfo = Round & 
+{
     event: Event
 }
 
-type ResultWithCompetitor = Result & {
+type ResultWithCompetitor = Result & 
+{
     rank?: number;
     competitor: Competitor & {registrations: Registration[]};
 }
@@ -178,7 +180,7 @@ const ResultTable = ({results: rawResults, roundDetails, route}: ResultTableProp
                                 {!isBlindfolded ? <TableCell className={cellTextColor}>{result.attempts[3] === 0 ? '' : numToFormatted(result.attempts[3], true)}</TableCell> : <></>}
                                 {!isBlindfolded ? <TableCell className={cellTextColor}>{result.attempts[4] === 0 ? '' : numToFormatted(result.attempts[4], true)}</TableCell> : <></>}
                                 {!isBlindfolded ? <TableCell className={`font-semibold ${cellTextColor}`}>{result.result ? numToFormatted(result.result) : ''}</TableCell> : <></>}
-                                <TableCell className={`font-bold ${cellTextColor}`}>{result.best ? numToFormatted(result.best) : ''}</TableCell>
+                                <TableCell className={cellTextColor}>{result.best ? numToFormatted(result.best) : ''}</TableCell>
                             </TableRow>
                         );
                     })}

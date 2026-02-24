@@ -56,6 +56,11 @@ enum RecordType {
   AVERAGE
 }
 
+enum ResultStatus {
+  ACTIVE
+  DROPOUT
+}
+
 model User {
   id         Int         @id
   competitor Competitor?
@@ -150,15 +155,16 @@ model Round {
 }
 
 model Result {
-  id           Int        @id @default(autoincrement())
-  roundId      Int        @map("round_id")
-  competitorId Int        @map("competitor_id")
+  id           Int          @id @default(autoincrement())
+  roundId      Int          @map("round_id")
+  competitorId Int          @map("competitor_id")
+  status       ResultStatus @default(ACTIVE)
   display      String?
   attempts     Float[]
   result       Float?
   best         Float?
-  competitor   Competitor @relation(fields: [competitorId], references: [id])
-  round        Round      @relation(fields: [roundId], references: [id])
+  competitor   Competitor   @relation(fields: [competitorId], references: [id])
+  round        Round        @relation(fields: [roundId], references: [id])
 
   @@unique([competitorId, roundId])
   @@map("result")
