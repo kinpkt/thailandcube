@@ -103,7 +103,8 @@ const ScoretakerPanel = ({ results: rawResults, roundDetails }: ScoretakerPanelP
                     return {
                         ...c,
                         registrationId: regId,
-                        formattedString: `${c.name} (${regId})`,
+                        formattedString: `${c.name}`,
+                        // formattedString: `${c.name} (${regId})`,
                     };
                 })
         );
