@@ -3,12 +3,54 @@
 import { Card, CardHeader, CardBody, CardFooter, Link, Button, Image, InputOtp, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Form } from '@heroui/react';
 import { signIn, useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { getUserRole } from '../actions/users';
+import { Role } from '@prisma/client';
 
 const Page = () =>
 {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     const router = useRouter();
+
+    const [loading, setLoading] = useState(true);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const { data: session, status } = useSession();
+
+    useEffect(() => 
+    {
+        if (status === 'authenticated' && session.user)
+        {
+            return;
+        }
+
+        const fetchRoleFromDB = async () =>
+        {
+            try
+            {
+                if (session)
+                {
+                    const role = await getUserRole(Number(session.user.id));
+
+                    setIsAdmin(role === Role.SUPERUSER || role === Role.ADMIN);
+                }
+                setLoading(false);
+            }
+            catch (error)
+            {
+                throw error;
+            }
+        }
+
+        fetchRoleFromDB();
+    }, [status, session]);
+
+    useEffect(() => 
+    {
+        if (!loading && isAdmin)
+            router.push('/admin/dashboard');
+        else if (!loading && !isAdmin)
+            router.push('/');
+    }, [loading, isAdmin, router]);
 
     useEffect(() => 
     {
