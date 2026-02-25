@@ -18,25 +18,23 @@ const Page = () =>
 
     useEffect(() => 
     {
-        if (status === 'authenticated' && session.user)
-        {
+        if (status === 'loading')
             return;
-        }
 
         const fetchRoleFromDB = async () =>
         {
             try
             {
-                if (session)
+                if (status === 'authenticated' && session?.user)
                 {
                     const role = await getUserRole(Number(session.user.id));
-
                     setIsAdmin(role === Role.SUPERUSER || role === Role.ADMIN);
                 }
                 setLoading(false);
             }
             catch (error)
             {
+                setLoading(false);
                 throw error;
             }
         }
@@ -45,12 +43,18 @@ const Page = () =>
     }, [status, session]);
 
     useEffect(() => 
-    {
-        if (!loading && isAdmin)
-            router.push('/admin/dashboard');
-        else if (!loading && !isAdmin)
-            router.push('/');
-    }, [loading, isAdmin, router]);
+    {
+        if (!loading)
+        {
+            if (status === 'authenticated')
+            {
+                if (isAdmin)
+                    router.push('/admin/dashboard');
+                else
+                    router.push('/');
+            }
+        }
+    }, [loading, isAdmin, status, router]);
 
     useEffect(() => 
     {
