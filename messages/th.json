@@ -114,7 +114,7 @@
         "schedule": "ตารางการแข่งขัน",
         "results": "ตรวจสอบผลการแข่งขัน",
         "view_results": "ดูผลการแข่งขัน",
-        "view_tournament": "ดูสายการแข่งขัน (Tournament)",
+        "view_tournament": "ดูสายการแข่งขัน",
         "round_not_open": "ยังไม่เปิดรอบการแข่งขัน"
     },
     "CompetitionSchedule":
