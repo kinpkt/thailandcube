@@ -27,70 +27,62 @@ const CompetitionSchedule = ({competition}: {competition: any}) =>
     return (
         <>
             <h1 className='text-3xl my-5' id='schedule'>{t('schedule')}</h1>
-            <Table className='w-[75%] mx-auto' aria-label='Schedule Table' isStriped>
-                <TableHeader>
-                    <TableColumn>{t('time')}</TableColumn>
-                    <TableColumn>{t('activity')}</TableColumn>
-                    <TableColumn>{t('format')}</TableColumn>
-                    <TableColumn>{t('time_limit')}</TableColumn>
-                    <TableColumn>{t('ranking')}</TableColumn>
-                </TableHeader>
-                <TableBody>
-                    {(LBCB2026 as ScheduleItem[]).map((item, index) => {
-                        // 1. If it's a Date Header Row
-                        if (item[`date_${locale}` as keyof ScheduleItem]) {
+            <div className='mx-auto w-full px-4 lg:w-[75%] lg:px-0 overflow-x-auto pb-4'>
+                <Table className='min-w-[650px] lg:min-w-full' aria-label='Schedule Table' isStriped>
+                    <TableHeader>
+                        <TableColumn>{t('time')}</TableColumn>
+                        <TableColumn>{t('activity')}</TableColumn>
+                        <TableColumn>{t('format')}</TableColumn>
+                        <TableColumn>{t('time_limit')}</TableColumn>
+                        <TableColumn>{t('ranking')}</TableColumn>
+                    </TableHeader>
+                    <TableBody>
+                        {(LBCB2026 as ScheduleItem[]).map((item, index) => {
+                            if (item[`date_${locale}` as keyof ScheduleItem]) {
+                                return (
+                                    <TableRow key={index} className='bg-primary-100'>
+                                        <TableCell className='font-bold text-black text-lg' colSpan={5}>
+                                            {item[`date_${locale}` as keyof ScheduleItem]}
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            }
+
                             return (
-                                <TableRow key={index} className='bg-primary-100'>
-                                    {/* We make one cell specific for the date */}
-                                    {/* We span the rest or just put the date in the second cell
-                                        Note: HeroUI doesn't support colSpan perfectly in all versions. 
-                                        A safer hack for visuals is putting the date in the Event column 
-                                        and empty text in others, OR using CSS. 
-                                        
-                                        However, here is the cleanest visual approach:
-                                    */}
-                                    <TableCell className='font-bold text-black text-lg' colSpan={5}>
-                                        {item[`date_${locale}` as keyof ScheduleItem]}
+                                <TableRow key={index}>
+                                    <TableCell className='whitespace-nowrap font-medium'>
+                                        {item.time}
+                                    </TableCell>
+                                    
+                                    <TableCell>
+                                        <div className='flex flex-col'>
+                                            <span className='font-bold'>{item[`event_${locale}` as keyof ScheduleItem] ?? item.event_th}</span>
+                                            {/* Handle event_2 if it exists */}
+                                            {/* {item.event_2 && (
+                                                <span className='text-xs text-default-500'>
+                                                    {item.event_2}
+                                                </span>
+                                            )} */}
+                                        </div>
+                                    </TableCell>
+                                    
+                                    <TableCell>
+                                        {item.format || '-'}
+                                    </TableCell>
+                                    
+                                    <TableCell className='text-xs'>
+                                        {item.time_limit || '-'}
+                                    </TableCell>
+                                    
+                                    <TableCell className='text-xs'>
+                                        {item[`ranking_${locale}` as keyof ScheduleItem] || '-'}
                                     </TableCell>
                                 </TableRow>
                             );
-                        }
-
-                        // 2. If it's a standard Event Row
-                        return (
-                            <TableRow key={index}>
-                                <TableCell className='whitespace-nowrap font-medium'>
-                                    {item.time}
-                                </TableCell>
-                                
-                                <TableCell>
-                                    <div className='flex flex-col'>
-                                        <span className='font-bold'>{item[`event_${locale}` as keyof ScheduleItem] ?? item.event_th}</span>
-                                        {/* Handle event_2 if it exists */}
-                                        {/* {item.event_2 && (
-                                            <span className='text-xs text-default-500'>
-                                                {item.event_2}
-                                            </span>
-                                        )} */}
-                                    </div>
-                                </TableCell>
-                                
-                                <TableCell>
-                                    {item.format || '-'}
-                                </TableCell>
-                                
-                                <TableCell className='text-xs'>
-                                    {item.time_limit || '-'}
-                                </TableCell>
-                                
-                                <TableCell className='text-xs'>
-                                    {item[`ranking_${locale}` as keyof ScheduleItem] || '-'}
-                                </TableCell>
-                            </TableRow>
-                        );
-                    })}
-                </TableBody>
-            </Table>
+                        })}
+                    </TableBody>
+                </Table>
+            </div>
         </>
     );
 }

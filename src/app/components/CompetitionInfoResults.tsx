@@ -39,7 +39,7 @@ const CompetitionInfoResults = ({competition}: {competition: ExtendedCompetition
 
     return (
         <>
-            <div className='mx-auto w-[50%] mt-10' id='results'>
+            <div className='mx-auto w-full px-4 lg:w-1/2 lg:px-0 mt-10' id='results'>
                 <Card>
                     <CardHeader>
                         <p className='text-3xl font-bold'>{t('results')}</p>
