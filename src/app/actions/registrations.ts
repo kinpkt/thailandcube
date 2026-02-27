@@ -180,29 +180,32 @@ export async function batchRegisterNewCompetitorFromCSV({ csvText, competitionId
                 wcaId: record.wca_id,
             };
             
-            let createdCompetitor;
+            // let createdCompetitor;
 
-            if (competitorData.wcaId)
-                createdCompetitor = await prisma.competitor.upsert(
-                    {
-                        where:
-                        {
-                            name: competitorData.name,
-                            wcaId: competitorData.wcaId,
-                        },
-                        update:
-                        {
-                            wcaId: competitorData.wcaId,
-                        },
-                        create:
-                        {
-                            name: competitorData.name,
-                            wcaId: competitorData.wcaId,
-                        },
-                    }
-                );
-            else
-                createdCompetitor = await prisma.competitor.create(
+            console.log(competitorData)
+
+            // if (competitorData.wcaId)
+            //     createdCompetitor = await prisma.competitor.upsert(
+            //         {
+            //             where:
+            //             {
+            //                 name: competitorData.name,
+            //                 wcaId: competitorData.wcaId,
+            //             },
+            //             update:
+            //             {
+            //                 wcaId: competitorData.wcaId,
+            //             },
+            //             create:
+            //             {
+            //                 name: competitorData.name,
+            //                 wcaId: competitorData.wcaId,
+            //             },
+            //         }
+            //     );
+            // else
+                // createdCompetitor = await prisma.competitor.create(
+                const createdCompetitor = await prisma.competitor.create(
                     {
                         data:
                         {
