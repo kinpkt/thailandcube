@@ -372,7 +372,21 @@ const ManualAddCompetitorModal = ({maxRegistrationId=0, competitor, competitionI
                                     <Input value={displayId.toString()} type='number' label='ID' isDisabled/>
                                     <Input onValueChange={setName} value={name} name='competitor-name' label='ชื่อ - นามสกุล' placeholder='ชื่อ - นามสกุลของผู้เข้าแข่งขัน' isRequired/>
                                     <Input onValueChange={setWCAId} value={wcaId} name='wca-id' label='WCA ID' placeholder='WCA ID ผู้เข้าแข่งขัน'/>
-                                    <Select variant='bordered' selectionMode='multiple' label='Events' selectedKeys={selectedEventKeys} onSelectionChange={(keys) => setSelectedEventKeys(keys as Set<string>)}>
+                                    <Select 
+                                        variant='bordered' 
+                                        selectionMode='multiple' 
+                                        label='Events' 
+                                        selectedKeys={selectedEventKeys} 
+                                        onSelectionChange={(keys) => 
+                                            {
+                                                if (keys === 'all') 
+                                                    setSelectedEventKeys(new Set(eventsInComp.map((e) => e.id.toString())));
+                                                else 
+                                                    setSelectedEventKeys(new Set(keys as Set<string>));
+
+                                            }
+                                        }
+                                    >
                                         {
                                             eventsInComp.map((event) => (
                                                 <SelectItem key={event.id}>{`${EventCodeToFullMap[event.event as EventType]} ${event.maxAge ? `(Max Age: ${event.maxAge})` : '(Open To All Age)'}`}</SelectItem>

@@ -118,38 +118,36 @@ export async function registerNewCompetitor({ payload, competitionId, eventsInCo
         );
 
         const eventsToCreate = eventsInComp
-        .filter((event) => 
-        {
-            const columnHeader = getEventColumnHeader(event);
-            const rawValue = payload[columnHeader];
-            return isTruthy(rawValue);
-        })
-        .map((event) => 
-        (
+            .filter((event) => 
             {
-                registrationId: createdRegistration.id,
-                eventId: event.id,
-            }
-        ));
+                // const columnHeader = getEventColumnHeader(event);
+                const rawValue = payload[event.id.toString()];
+                return isTruthy(rawValue);
+            })
+            .map((event) => 
+            (
+                {
+                    registrationId: createdRegistration.id,
+                    eventId: event.id,
+                }
+            ));
 
-        await prisma.registrationEvent.deleteMany(
+        await prisma.$transaction([
+            prisma.registrationEvent.deleteMany(
             {
                 where: 
-                {
-                    registrationId: createdRegistration.id
+                { 
+                    registrationId: createdRegistration.id 
                 }
-            }
-        );
-
-        if (eventsToCreate.length > 0)
-        {
-            await prisma.registrationEvent.createMany(
+            }),
+            ...(eventsToCreate.length > 0 ? [
+                prisma.registrationEvent.createMany(
                 {
                     data: eventsToCreate,
                     skipDuplicates: true,
-                }
-            );
-        }
+                })
+            ] : [])
+        ]);
 
         return true;
     }
