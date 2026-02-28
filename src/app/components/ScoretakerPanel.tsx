@@ -313,15 +313,6 @@ const ScoretakerPanel = ({ results: rawResults, roundDetails }: ScoretakerPanelP
 
     useEffect(() => 
     {
-        if (!localStorage.getItem('username')) 
-        {
-            router.push('/');
-            return;
-        }
-    }, [router]);
-
-    useEffect(() => 
-    {
         if (roundDetails?.cutoff && roundDetails.event.event !== EventType.E333BF)
             setDisabledCutoff((formattedToNum(a1) <= -1 && formattedToNum(a2) <= -1) || (formattedToNum(a1) >= roundDetails.cutoff && formattedToNum(a2) >= roundDetails.cutoff));
     }, [a1, a2, roundDetails]);
