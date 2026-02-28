@@ -23,7 +23,7 @@ import { useRouter } from 'next/navigation';
 import { Event, EventType, Round, Result, Competitor, Registration, ResultStatus } from '@prisma/client';
 import { calculateAo5, calculateBo3 } from '@/lib/Calculation';
 import { EventCodeToFullMap } from '@/lib/EnumMapping';
-import { CheckIcon, XCircleIcon } from '@heroicons/react/16/solid';
+import { CheckCircleIcon, CheckIcon, XCircleIcon } from '@heroicons/react/16/solid';
 import { submitRoundResult, updateResultStatus } from '../actions/results';
 
 type RoundWithEventInfo = Round & 
@@ -301,7 +301,7 @@ const ScoretakerPanel = ({ results: rawResults, roundDetails }: ScoretakerPanelP
     const handleQuitProceed = async (result: Result) => 
     {
         const newResult = result;
-        newResult.status = ResultStatus.DROPOUT;
+        newResult.status = result.status === ResultStatus.DROPOUT ? ResultStatus.ACTIVE : ResultStatus.DROPOUT;
 
         const success = await updateResultStatus(newResult);
 
@@ -309,6 +309,8 @@ const ScoretakerPanel = ({ results: rawResults, roundDetails }: ScoretakerPanelP
             addToast({title: 'ปรับสถานะสำเร็จ', color: 'success', icon: (<CheckIcon/>)})
         else
             addToast({title: 'เกิดข้อผิดพลาด', color: 'danger', icon: (<XCircleIcon/>)})
+
+        router.refresh();
     }
 
     useEffect(() => 
@@ -407,7 +409,7 @@ const ScoretakerPanel = ({ results: rawResults, roundDetails }: ScoretakerPanelP
                             {!isBlindfolded ? <TableColumn>5</TableColumn> : <TableColumn className='hidden'>5</TableColumn>}
                             {!isBlindfolded ? <TableColumn>Average</TableColumn> : <TableColumn className='hidden'>Avg</TableColumn>}
                             <TableColumn>Best</TableColumn>
-                            <TableColumn>{''}</TableColumn>
+                            <TableColumn>สละสิทธิ์</TableColumn>
                         </TableHeader>
                         <TableBody emptyContent={'No Results'}>
                             {allResults.map((result, i) => {
@@ -447,7 +449,7 @@ const ScoretakerPanel = ({ results: rawResults, roundDetails }: ScoretakerPanelP
                                         {!isBlindfolded ? <TableCell className={cellTextColor}>{result.attempts[4] === 0 ? '' : numToFormatted(result.attempts[4], true)}</TableCell> : <></>}
                                         {!isBlindfolded ? <TableCell className={`font-semibold ${cellTextColor}`}>{result.result ? numToFormatted(result.result) : ''}</TableCell> : <></>}
                                         <TableCell className={cellTextColor}>{result.best ? numToFormatted(result.best) : ''}</TableCell>
-                                        <TableCell className={`font-bold ${cellTextColor}`}><Button color='danger' variant='flat' onPress={() => handleQuitProceed(result)} isIconOnly isDisabled={!isValued}><XCircleIcon className='w-5 h-5'/></Button></TableCell>
+                                        <TableCell className={`font-bold ${cellTextColor}`}><Button color={result.status === ResultStatus.ACTIVE ? 'danger' : 'success'} variant='flat' onPress={() => handleQuitProceed(result)} isIconOnly isDisabled={!isValued}>{result.status === ResultStatus.ACTIVE ? <XCircleIcon className='w-5 h-5'/> : <CheckCircleIcon className='w-5 h-5'/>}</Button></TableCell>
                                     </TableRow>
                                 );
                             })}
