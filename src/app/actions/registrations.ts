@@ -132,6 +132,27 @@ export async function registerNewCompetitor({ payload, competitionId, eventsInCo
                 }
             ));
 
+        const registeredEventIds = eventsToCreate.map((e) => e.eventId);
+
+        const openFirstRounds = await prisma.round.findMany(
+        {
+            where: 
+            {
+                eventId: { in: registeredEventIds },
+                round: 1,
+                open: true
+            }
+        });
+
+        // Map the open rounds to Result records
+        const resultsToCreate = openFirstRounds.map((round) => 
+        (
+            {
+                competitorId: createdCompetitor.id,
+                roundId: round.id
+            }
+        ));
+
         await prisma.$transaction([
             prisma.registrationEvent.deleteMany(
             {
@@ -144,6 +165,14 @@ export async function registerNewCompetitor({ payload, competitionId, eventsInCo
                 prisma.registrationEvent.createMany(
                 {
                     data: eventsToCreate,
+                    skipDuplicates: true,
+                })
+            ] : []),
+            // Insert the Results within the same transaction to guarantee atomicity
+            ...(resultsToCreate.length > 0 ? [
+                prisma.result.createMany(
+                {
+                    data: resultsToCreate,
                     skipDuplicates: true,
                 })
             ] : [])
